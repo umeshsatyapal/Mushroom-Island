@@ -1,0 +1,8 @@
+{
+  "name": "Mushroom Island",
+  "description": "Premium organic mushroom extracts and supplements. Real ingredients, real results. Now powered by Mushroom Intelligence.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
