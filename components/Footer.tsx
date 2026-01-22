@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
                     <div className="col-span-1 md:col-span-1">
                         <h3 className="font-serif text-2xl font-bold mb-6">Mushroom Island</h3>
                         <p className="text-mushroom-200 text-sm leading-relaxed mb-6">
-                            Real Mushrooms was born from a decades-long mission to transform the functional mushroom industry from the ground up through unmatched quality, responsible sourcing, and rigorous testing.
+                            Mushroom Island was born from a decades-long mission to transform the functional mushroom industry from the ground up through unmatched quality, responsible sourcing, and rigorous testing.
                         </p>
                         <div className="flex space-x-4">
                             <a href="#" className="text-white hover:text-mushroom-300 transition-colors"><Instagram size={20} /></a>
