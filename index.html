@@ -1,68 +1,55 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mushroom Island - Organic Mushroom Extracts</title>
+    <title>Greenlays Agritech | Nature Engineered</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              serif: ['Merriweather', 'serif'],
-              sans: ['Inter', 'sans-serif'],
+              serif: ['"Playfair Display"', 'serif'],
+              sans: ['"Manrope"', 'sans-serif'],
             },
             colors: {
-              mushroom: {
-                50: '#f4f7f6',
-                100: '#e3ebe9',
-                200: '#c5d8d4',
-                300: '#9dbbb4',
-                400: '#739992',
-                500: '#557d74',
-                600: '#42655d',
-                700: '#37524d',
-                800: '#108474', // Primary Brand Color
-                900: '#273835',
-                950: '#152321',
-              },
-              earth: {
-                800: '#4E3729' // Secondary Brand Color
+              greenlays: {
+                dark: '#052e16',   /* Deep Forest Background */
+                primary: '#0F3D2E',
+                silver: '#E2E8F0', /* Metallic Text */
+                lime: '#84CC16',   /* Neon Accent */
               }
+            },
+            backgroundImage: {
+               'hero-radial': 'radial-gradient(circle at 50% 30%, rgba(20, 83, 45, 0.4) 0%, rgba(5, 46, 22, 0.95) 60%, #021108 100%)',
             }
           }
         }
       }
     </script>
+    
     <style>
-      /* Custom Scrollbar for products */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-      }
+      /* Custom Utilities */
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      
+      /* Essential for Locomotive Scroll */
+      html.has-scroll-smooth { overflow: hidden; }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "vite": "https://esm.sh/vite@^7.3.1",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
-  }
-}
-</script>
-</head>
-  <body class="bg-[#F9FAFB] text-gray-900 font-sans antialiased">
+  </head>
+  
+  <body class="bg-[#021108] text-greenlays-silver font-sans antialiased">
     <div id="root"></div>
+    
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
