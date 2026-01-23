@@ -1,9 +1,8 @@
-
 export const PRODUCTS = [
   {
     id: 1,
     name: "Organic Lion's Mane Extract",
-    price: "€30.95",
+    price: "₹2,499", // Changed from €30.95
     image: "https://picsum.photos/600/600?random=1",
     tag: "Best Seller",
     description: "Support memory, focus, and nerve health with our pure Lion's Mane."
@@ -11,7 +10,7 @@ export const PRODUCTS = [
   {
     id: 2,
     name: "Island Defenders Blend",
-    price: "€34.95",
+    price: "₹2,899", // Changed from €34.95
     image: "https://picsum.photos/600/600?random=2",
     tag: "Popular",
     description: "Our signature blend of 5 potent mushrooms for daily immune defense."
@@ -19,7 +18,7 @@ export const PRODUCTS = [
   {
     id: 3,
     name: "Reishi Mushroom Capsules",
-    price: "€34.95",
+    price: "₹2,899", // Changed from €34.95
     image: "https://picsum.photos/600/600?random=3",
     tag: "Relaxation",
     description: "The mushroom of immortality. Calms the mind and supports sleep."
@@ -27,7 +26,7 @@ export const PRODUCTS = [
   {
     id: 4,
     name: "Cordyceps-M Energy",
-    price: "€30.95",
+    price: "₹2,499", // Changed from €30.95
     image: "https://picsum.photos/600/600?random=4",
     tag: "Energy",
     description: "Boost athletic performance and energy levels naturally."
