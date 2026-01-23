@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, Search, ShoppingBag, User, X } from 'lucide-react';
 
@@ -22,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenAI }) => {
         <>
             {/* Announcement Bar */}
             <div className="bg-mushroom-950 text-white text-xs text-center py-2 font-medium tracking-wide">
-                FREE SHIPPING OVER €75 + 30-DAY FREE RETURNS
+                FREE SHIPPING OVER ₹1,499 + 30-DAY FREE RETURNS
             </div>
 
             {/* Main Header */}
