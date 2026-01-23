@@ -1,57 +1,95 @@
-
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { ShoppingBag } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PRODUCTS } from '../constants';
-import { ArrowRight, Star } from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ProductList: React.FC = () => {
+    const sectionRef = useRef<HTMLSectionElement>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
+    const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+    useEffect(() => {
+        gsap.fromTo(headerRef.current,
+            { opacity: 0, y: 30 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: 'top 80%',
+                }
+            }
+        );
+
+        cardsRef.current.forEach((card, index) => {
+            if (card) {
+                gsap.fromTo(card,
+                    { opacity: 0, y: 50 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        delay: index * 0.1,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 90%',
+                        }
+                    }
+                );
+            }
+        });
+    }, []);
+
     return (
-        <section className="py-20 bg-white">
+        <section ref={sectionRef} className="py-24 bg-[#2A352B] relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <h2 className="font-serif text-3xl md:text-4xl font-bold text-mushroom-950 mb-4">
-                        Start with these mushroom supplements
+                <div ref={headerRef} className="text-center mb-16">
+                    <span className="text-greenlays-lime font-bold tracking-widest uppercase block mb-2">Our Collection</span>
+                    <h2 className="text-4xl md:text-5xl font-serif font-bold text-white">
+                        Premium Mushroom Extracts
                     </h2>
-                    <div className="h-1 w-24 bg-mushroom-800 mx-auto rounded-full"></div>
                 </div>
 
-                {/* Grid Layout instead of complex slider for simplicity */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {PRODUCTS.map((product) => (
-                        <div key={product.id} className="group relative bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
-                            {/* Image Container */}
-                            <div className="relative aspect-square overflow-hidden bg-gray-100">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {PRODUCTS.map((product, index) => (
+                        <div 
+                            key={product.id} 
+                            ref={el => cardsRef.current[index] = el}
+                            className="group bg-greenlays-primary rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/5 hover:border-greenlays-lime/30 hover:-translate-y-2 relative"
+                        >
+                             <div className="absolute top-4 left-4 z-10">
+                                <span className="bg-greenlays-lime text-greenlays-dark text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                    {product.tag}
+                                </span>
+                            </div>
+                            <div className="relative h-64 overflow-hidden bg-greenlays-dark/50">
                                 <img 
                                     src={product.image} 
                                     alt={product.name} 
-                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                                 />
-                                {product.tag && (
-                                    <div className="absolute top-4 left-4 bg-mushroom-800 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                        {product.tag}
-                                    </div>
-                                )}
-                                <div className="absolute bottom-4 right-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                    <button className="bg-white text-mushroom-950 p-3 rounded-full shadow-lg hover:bg-mushroom-50">
-                                        <ArrowRight size={20} />
-                                    </button>
-                                </div>
                             </div>
-
-                            {/* Content */}
-                            <div className="p-6 flex flex-col flex-1">
-                                <div className="flex text-yellow-400 mb-2">
-                                    {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
+                            <div className="p-6">
+                                <div className="flex justify-between items-start mb-2">
+                                     <h3 className="text-xl font-serif font-bold text-white group-hover:text-greenlays-lime transition-colors">
+                                        {product.name}
+                                    </h3>
+                                     <span className="text-lg font-bold text-greenlays-lime">{product.price}</span>
                                 </div>
-                                <h3 className="font-serif text-lg font-bold text-gray-900 mb-2 group-hover:text-mushroom-800 transition-colors">
-                                    {product.name}
-                                </h3>
-                                <p className="text-sm text-gray-500 mb-4 flex-1 line-clamp-3">
+                               
+                                <p className="text-gray-300 text-sm mb-6 line-clamp-2">
                                     {product.description}
                                 </p>
-                                <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                                    <span className="text-lg font-bold text-mushroom-950">{product.price}</span>
-                                    <span className="text-xs font-medium text-mushroom-600 uppercase tracking-wide cursor-pointer group-hover:underline">Add to Cart</span>
-                                </div>
+                                
+                                {/* NEW BUTTON STYLE APPLIED HERE */}
+                                <button className="w-full bg-greenlays-button text-white px-4 py-3 rounded-md font-bold uppercase tracking-wider shadow-md hover:bg-greenlays-button-hover hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2">
+                                    <ShoppingBag size={18} />
+                                    Add to Cart
+                                </button>
                             </div>
                         </div>
                     ))}
