@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, Search, ShoppingBag, User, X } from 'lucide-react';
+// ⬇️ NEW: This imports the image securely from your main folder
+import logoImg from '../logo.jpg';
 
 interface HeaderProps {
     onOpenAI: () => void;
@@ -19,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenAI }) => {
 
     return (
         <>
-            {/* Announcement Bar - Updated to Gold Accent */}
+            {/* Announcement Bar */}
             <div className="bg-greenlays-lime text-greenlays-dark text-xs text-center py-2 font-bold tracking-widest uppercase">
                 Free Shipping over ₹1,499 + 30-Day Returns
             </div>
@@ -46,9 +48,9 @@ const Header: React.FC<HeaderProps> = ({ onOpenAI }) => {
                         {/* LOGO SECTION */}
                         <div className="flex-shrink-0 flex items-center justify-center flex-1 md:flex-none px-4">
                            <a href="#" className="group relative">
-                               {/* CSS Magic: rounded-full makes the square image a circle */}
+                               {/* Updated to use the imported image variable */}
                                <img 
-                                src="/logo.jpg" 
+                                src={logoImg} 
                                 alt="Mushroom Island" 
                                 className="h-20 w-20 rounded-full object-cover border-2 border-greenlays-lime/20 group-hover:border-greenlays-lime transition-all duration-300 shadow-2xl"
                                />
