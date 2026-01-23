@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -10,39 +9,39 @@ const App: React.FC = () => {
     const [isAIOpen, setIsAIOpen] = useState(false);
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-[#2A352B]">
             <Header onOpenAI={() => setIsAIOpen(true)} />
             
             <main className="flex-grow">
                 <Hero />
                 
                 {/* Stats Section */}
-                <section className="bg-mushroom-50 py-12">
+                <section className="bg-greenlays-primary py-12 border-y border-white/5">
                     <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         <div>
-                            <p className="text-3xl font-serif font-bold text-mushroom-800">94k+</p>
-                            <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">5-Star Reviews</p>
+                            <p className="text-3xl font-serif font-bold text-greenlays-lime">94k+</p>
+                            <p className="text-sm font-medium text-gray-400 uppercase tracking-wide">5-Star Reviews</p>
                         </div>
                         <div>
-                            <p className="text-3xl font-serif font-bold text-mushroom-800">100%</p>
-                            <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">Organic</p>
+                            <p className="text-3xl font-serif font-bold text-greenlays-lime">100%</p>
+                            <p className="text-sm font-medium text-gray-400 uppercase tracking-wide">Organic</p>
                         </div>
                         <div>
-                            <p className="text-3xl font-serif font-bold text-mushroom-800">0</p>
-                            <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">Fillers/Grains</p>
+                            <p className="text-3xl font-serif font-bold text-greenlays-lime">0</p>
+                            <p className="text-sm font-medium text-gray-400 uppercase tracking-wide">Fillers/Grains</p>
                         </div>
                         <div>
-                            <p className="text-3xl font-serif font-bold text-mushroom-800">3rd</p>
-                            <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">Party Tested</p>
+                            <p className="text-3xl font-serif font-bold text-greenlays-lime">3rd</p>
+                            <p className="text-sm font-medium text-gray-400 uppercase tracking-wide">Party Tested</p>
                         </div>
                     </div>
                 </section>
 
                 <ProductList />
 
-                {/* AI Promo Section */}
-                <section className="bg-earth-800 text-white py-24 relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10 pointer-events-none">
+                {/* AI Promo Section - FIXED BUTTON COLOR */}
+                <section className="bg-[#1f2820] text-white py-24 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-5 pointer-events-none">
                          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
                                 <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
@@ -51,18 +50,19 @@ const App: React.FC = () => {
                         </svg>
                     </div>
                     <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-                        <span className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-6 backdrop-blur-sm border border-white/20">
+                        <span className="inline-block bg-white/10 text-greenlays-lime text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-6 backdrop-blur-sm border border-white/10">
                             New Feature
                         </span>
                         <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6">
                             Meet Your Mushroom Guide
                         </h2>
-                        <p className="text-lg text-mushroom-100 mb-10 max-w-2xl mx-auto">
+                        <p className="text-lg text-gray-300 mb-10 max-w-2xl mx-auto">
                             Powered by the latest Gemini Intelligence. Research strains, check facts, generate art, or visualize recipes instantly.
                         </p>
+                        {/* UPDATED BUTTON STYLE */}
                         <button 
                             onClick={() => setIsAIOpen(true)}
-                            className="bg-white text-earth-800 px-8 py-4 rounded-lg font-bold uppercase tracking-wide hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl"
+                            className="bg-greenlays-lime text-greenlays-dark px-8 py-4 rounded-lg font-bold uppercase tracking-wide hover:bg-white transition-all transform hover:scale-105 shadow-xl"
                         >
                             Open Mushroom Lab
                         </button>
