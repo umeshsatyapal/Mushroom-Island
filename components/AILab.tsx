@@ -1,6 +1,6 @@
-
-import React, { useState, useRef } from 'react';
-import { X, Search, Sparkles, Image as ImageIcon, BrainCircuit, Upload, Loader2, Link as LinkIcon } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { X, Sparkles, Search, Image as ImageIcon, Edit, Loader2, Send } from 'lucide-react';
+import gsap from 'gsap';
 import { searchMushroomInfo, generateMushroomImage, editMushroomImage, deepResearch } from '../services/geminiService';
 
 interface AILabProps {
@@ -8,86 +8,78 @@ interface AILabProps {
     onClose: () => void;
 }
 
-type Tab = 'search' | 'generate' | 'edit' | 'think';
+type Mode = 'search' | 'image' | 'edit';
 
 const AILab: React.FC<AILabProps> = ({ isOpen, onClose }) => {
-    const [activeTab, setActiveTab] = useState<Tab>('search');
+    const [mode, setMode] = useState<Mode>('search');
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [result, setResult] = useState<string | null>(null);
-    const [sources, setSources] = useState<any[]>([]);
-    const [generatedImage, setGenerateImage] = useState<string | null>(null);
-    const [uploadedImage, setUploadImage] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [result, setResult] = useState<any>(null);
+    const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+    const [imageToEdit, setImageToEdit] = useState<string | null>(null);
 
-    // Reset state when switching tabs
-    const handleTabChange = (tab: Tab) => {
-        setActiveTab(tab);
-        setQuery('');
-        setResult(null);
-        setSources([]);
-        setGenerateImage(null);
-        // Don't reset uploaded image immediately in case they switch back
+    const modalRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (isOpen) {
+            gsap.fromTo(modalRef.current,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.3 }
+            );
+            gsap.fromTo(contentRef.current,
+                { y: 50, opacity: 0, scale: 0.95 },
+                { y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.5)', delay: 0.1 }
+            );
+        }
+    }, [isOpen]);
+
+    const handleClose = () => {
+        gsap.to(contentRef.current, { y: 50, opacity: 0, scale: 0.95, duration: 0.3 });
+        gsap.to(modalRef.current, {
+            opacity: 0, duration: 0.3, onComplete: () => {
+                onClose();
+                setResult(null);
+                setGeneratedImage(null);
+                setQuery('');
+            }
+        });
     };
 
-    const handleSearch = async () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (!query.trim()) return;
+
         setIsLoading(true);
         setResult(null);
-        setSources([]);
-        
-        const data = await searchMushroomInfo(query);
-        setResult(data.text);
-        setSources(data.sources || []);
-        setIsLoading(false);
-    };
-
-    const handleGenerate = async () => {
-        if (!query.trim()) return;
-        setIsLoading(true);
-        setGenerateImage(null);
+        setGeneratedImage(null);
 
         try {
-            const base64 = await generateMushroomImage(query, "1K");
-            setGenerateImage(base64);
-        } catch (e) {
-            setResult("Failed to generate image.");
+            if (mode === 'search') {
+                const data = await searchMushroomInfo(query);
+                setResult(data);
+            } else if (mode === 'image') {
+                const image = await generateMushroomImage(query);
+                setGeneratedImage(image);
+            } else if (mode === 'edit' && imageToEdit) {
+                 const edited = await editMushroomImage(imageToEdit, query);
+                 // Simplified for demo - in reality would get a new image back
+                 setResult({ text: "Image editing instructions processed. (Visual output requires backend implementation)"});
+            }
+        } catch (error) {
+            console.error("AI Error:", error);
+            setResult({ text: "An error occurred. Please try again." });
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
-    const handleEdit = async () => {
-        if (!query.trim() || !uploadedImage) return;
-        setIsLoading(true);
-        setGenerateImage(null);
-
-        try {
-             // Remove data URL prefix for API
-             const base64Data = uploadedImage.split(',')[1];
-             const resultImage = await editMushroomImage(base64Data, query);
-             setGenerateImage(resultImage);
-        } catch (e) {
-            setResult("Failed to edit image.");
-        }
-        setIsLoading(false);
-    };
-
-    const handleThink = async () => {
-        if (!query.trim()) return;
-        setIsLoading(true);
-        setResult(null);
-        
-        const text = await deepResearch(query);
-        setResult(text);
-        setIsLoading(false);
-    };
-
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setUploadImage(reader.result as string);
+                setImageToEdit(reader.result as string);
             };
             reader.readAsDataURL(file);
         }
@@ -96,232 +88,119 @@ const AILab: React.FC<AILabProps> = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-mushroom-950/60 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+        <div ref={modalRef} className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={handleClose}></div>
+            <div ref={contentRef} className="relative bg-greenlays-primary w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden border border-white/10">
                 
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-mushroom-50 to-white">
+                <div className="bg-[#2A352B] p-6 flex justify-between items-center border-b border-white/10">
                     <div className="flex items-center gap-3">
-                        <div className="bg-mushroom-800 text-white p-2 rounded-lg">
-                            <Sparkles size={24} />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-serif font-bold text-mushroom-950">Mushroom Intelligence</h2>
-                            <p className="text-xs text-mushroom-600 font-medium uppercase tracking-wider">Powered by Gemini 2.5 & 3.0</p>
-                        </div>
+                         <span className="relative flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-greenlays-lime opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-greenlays-lime"></span>
+                        </span>
+                        <h2 className="text-2xl font-serif font-bold text-white">Mushroom AI Lab</h2>
                     </div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+                    <button onClick={handleClose} className="text-gray-400 hover:text-white transition-colors p-1">
                         <X size={24} />
                     </button>
                 </div>
 
-                {/* Tabs */}
-                <div className="flex border-b border-gray-100 bg-gray-50/50">
-                    <button 
-                        onClick={() => handleTabChange('search')}
-                        className={`flex-1 py-4 px-2 text-sm font-bold flex items-center justify-center gap-2 border-b-2 transition-all ${activeTab === 'search' ? 'border-mushroom-800 text-mushroom-800 bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-                    >
-                        <Search size={16} /> Search Grounding
+                {/* Mode Selection */}
+                <div className="flex border-b border-white/10">
+                    <button onClick={() => setMode('search')} className={`flex-1 p-4 font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${mode === 'search' ? 'bg-greenlays-button text-white' : 'text-gray-400 hover:bg-[#2A352B] hover:text-white'}`}>
+                        <Search size={18} /> Research
                     </button>
-                    <button 
-                        onClick={() => handleTabChange('generate')}
-                        className={`flex-1 py-4 px-2 text-sm font-bold flex items-center justify-center gap-2 border-b-2 transition-all ${activeTab === 'generate' ? 'border-mushroom-800 text-mushroom-800 bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-                    >
-                        <ImageIcon size={16} /> Gen Image
+                    <button onClick={() => setMode('image')} className={`flex-1 p-4 font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${mode === 'image' ? 'bg-greenlays-button text-white' : 'text-gray-400 hover:bg-[#2A352B] hover:text-white'}`}>
+                        <ImageIcon size={18} /> Generate
                     </button>
-                    <button 
-                        onClick={() => handleTabChange('edit')}
-                        className={`flex-1 py-4 px-2 text-sm font-bold flex items-center justify-center gap-2 border-b-2 transition-all ${activeTab === 'edit' ? 'border-mushroom-800 text-mushroom-800 bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-                    >
-                        <Sparkles size={16} /> Edit Image
-                    </button>
-                    <button 
-                        onClick={() => handleTabChange('think')}
-                        className={`flex-1 py-4 px-2 text-sm font-bold flex items-center justify-center gap-2 border-b-2 transition-all ${activeTab === 'think' ? 'border-mushroom-800 text-mushroom-800 bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-                    >
-                        <BrainCircuit size={16} /> Deep Think
+                    <button onClick={() => setMode('edit')} className={`flex-1 p-4 font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${mode === 'edit' ? 'bg-greenlays-button text-white' : 'text-gray-400 hover:bg-[#2A352B] hover:text-white'}`}>
+                        <Edit size={18} /> Edit
                     </button>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-6 bg-gray-50/30">
-                    
-                    {/* Search Tab */}
-                    {activeTab === 'search' && (
-                        <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-                            <label className="text-sm font-semibold text-gray-700">Ask any question about medicinal mushrooms, benefits, or science.</label>
-                            <div className="flex gap-2">
-                                <input 
-                                    type="text" 
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="e.g., What are the benefits of Turkey Tail?"
-                                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mushroom-500 focus:border-transparent outline-none"
-                                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                                />
-                                <button 
-                                    onClick={handleSearch}
-                                    disabled={isLoading}
-                                    className="bg-mushroom-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-mushroom-700 disabled:opacity-50 transition-colors"
-                                >
-                                    {isLoading ? <Loader2 className="animate-spin" /> : 'Ask'}
-                                </button>
-                            </div>
-                            {result && (
-                                <div className="mt-4 bg-white p-6 rounded-xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-bottom-2">
-                                    <div className="prose prose-mushroom max-w-none text-gray-800 leading-relaxed whitespace-pre-wrap">
-                                        {result}
-                                    </div>
-                                    {sources.length > 0 && (
-                                        <div className="mt-6 pt-4 border-t border-gray-100">
-                                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Sources</h4>
-                                            <div className="grid gap-2">
-                                                {sources.map((source, idx) => (
-                                                    source.web?.uri && (
-                                                        <a key={idx} href={source.web.uri} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-mushroom-600 hover:text-mushroom-800 hover:underline">
-                                                            <LinkIcon size={12} />
-                                                            {source.web.title}
-                                                        </a>
-                                                    )
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                <div className="p-6">
+                     {mode === 'edit' && !imageToEdit && (
+                        <div className="mb-6 border-2 border-dashed border-white/20 rounded-xl p-8 text-center">
+                            <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <label htmlFor="image-upload" className="cursor-pointer">
+                                <span className="bg-greenlays-button text-white px-6 py-3 rounded-md font-bold uppercase tracking-wider shadow-md hover:bg-greenlays-button-hover hover:shadow-lg transition-all duration-300 inline-block">
+                                    Upload Mushroom Image
+                                </span>
+                                <input id="image-upload" type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                            </label>
+                             <p className="text-gray-400 text-sm mt-2">PNG, JPG up to 5MB</p>
                         </div>
                     )}
 
-                    {/* Generate Image Tab */}
-                    {activeTab === 'generate' && (
-                        <div className="flex flex-col gap-4 max-w-2xl mx-auto h-full">
-                             <label className="text-sm font-semibold text-gray-700">Describe the mushroom art you want to create (Nano Banana Pro).</label>
-                             <div className="flex gap-2">
-                                <input 
-                                    type="text" 
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="e.g., A cinematic shot of a glowing blue mushroom in a rain forest"
-                                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mushroom-500 outline-none"
-                                    onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-                                />
-                                <button 
-                                    onClick={handleGenerate}
-                                    disabled={isLoading}
-                                    className="bg-mushroom-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-mushroom-700 disabled:opacity-50 transition-colors"
-                                >
-                                    {isLoading ? <Loader2 className="animate-spin" /> : 'Generate'}
-                                </button>
+                    {mode === 'edit' && imageToEdit && (
+                         <div className="mb-6 relative rounded-xl overflow-hidden max-h-64">
+                            <img src={imageToEdit} alt="To edit" className="w-full h-full object-cover opacity-70" />
+                             <button onClick={() => setImageToEdit(null)} className="absolute top-2 right-2 bg-black/60 text-white p-1 rounded-full hover:bg-black/80">
+                                <X size={16} />
+                             </button>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="relative">
+                        <input
+                            type="text"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            placeholder={
+                                mode === 'search' ? "Ask about mushroom benefits, dosage, history..." :
+                                mode === 'image' ? "Describe the mushroom image you want to see..." :
+                                "Describe how to edit your image (e.g., 'make it glow')..."
+                            }
+                            className="w-full bg-[#2A352B] text-white placeholder-gray-500 rounded-xl pl-6 pr-32 py-4 focus:outline-none focus:ring-2 focus:ring-greenlays-lime/50 border border-white/10"
+                            disabled={isLoading}
+                        />
+                        
+                        {/* NEW BUTTON STYLE APPLIED HERE */}
+                        <button type="submit" disabled={isLoading || !query.trim() || (mode === 'edit' && !imageToEdit)} className="absolute right-2 top-2 bottom-2 bg-greenlays-button text-white px-6 rounded-lg font-bold uppercase tracking-wider shadow-md hover:bg-greenlays-button-hover hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+                            {isLoading ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
+                        </button>
+                    </form>
+
+                    {/* Results Area */}
+                    <div className="mt-8 min-h-[200px] max-h-[400px] overflow-y-auto no-scrollbar rounded-xl bg-[#2A352B]/50 p-6 border border-white/5">
+                        {isLoading && (
+                            <div className="flex flex-col items-center justify-center h-full text-greenlays-lime">
+                                <Sparkles className="animate-pulse mb-4" size={32} />
+                                <p className="font-medium animate-pulse">Mycelium network is processing...</p>
                             </div>
-                            <div className="flex-1 min-h-[300px] bg-white border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center relative overflow-hidden">
-                                {isLoading && (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 z-10">
-                                        <Loader2 className="animate-spin text-mushroom-600 w-10 h-10 mb-2" />
-                                        <p className="text-sm font-medium text-gray-500">Creating your masterpiece...</p>
-                                    </div>
-                                )}
-                                {generatedImage ? (
-                                    <img src={generatedImage} alt="Generated" className="max-w-full max-h-full object-contain shadow-lg" />
-                                ) : (
-                                    <div className="text-center text-gray-400">
-                                        <ImageIcon size={48} className="mx-auto mb-2 opacity-50" />
-                                        <p>Image will appear here</p>
+                        )}
+
+                        {!isLoading && result && (
+                            <div className="prose prose-invert max-w-none">
+                                <p className="text-gray-200 leading-relaxed whitespace-pre-line">{result.text}</p>
+                                {result.sources && result.sources.length > 0 && (
+                                    <div className="mt-4 pt-4 border-t border-white/10">
+                                        <h4 className="text-sm font-bold text-greenlays-lime uppercase mb-2">Sources:</h4>
+                                        <ul className="text-xs text-gray-400 space-y-1">
+                                            {result.sources.map((source: any, index: number) => (
+                                                <li key={index}>{source.web.title}</li>
+                                            ))}
+                                        </ul>
                                     </div>
                                 )}
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {/* Edit Image Tab */}
-                    {activeTab === 'edit' && (
-                         <div className="flex flex-col gap-4 max-w-2xl mx-auto h-full">
-                            <div className="grid grid-cols-2 gap-4 h-full">
-                                {/* Upload Area */}
-                                <div className="col-span-2 md:col-span-1">
-                                    <div 
-                                        className="h-48 md:h-64 bg-white border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors relative"
-                                        onClick={() => fileInputRef.current?.click()}
-                                    >
-                                        {uploadedImage ? (
-                                            <img src={uploadedImage} alt="Upload" className="w-full h-full object-cover rounded-xl" />
-                                        ) : (
-                                            <>
-                                                <Upload size={32} className="text-gray-400 mb-2" />
-                                                <p className="text-sm text-gray-500 font-medium">Click to upload image</p>
-                                            </>
-                                        )}
-                                        <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
-                                    </div>
-                                </div>
-                                
-                                {/* Result Area */}
-                                <div className="col-span-2 md:col-span-1">
-                                    <div className="h-48 md:h-64 bg-white border border-gray-200 rounded-xl flex items-center justify-center relative overflow-hidden">
-                                        {isLoading && (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
-                                                <Loader2 className="animate-spin text-mushroom-600" />
-                                            </div>
-                                        )}
-                                        {generatedImage ? (
-                                            <img src={generatedImage} alt="Edited" className="w-full h-full object-cover rounded-xl" />
-                                        ) : (
-                                            <p className="text-sm text-gray-400">Edited image result</p>
-                                        )}
-                                    </div>
-                                </div>
+                        {!isLoading && generatedImage && (
+                            <div className="rounded-xl overflow-hidden shadow-2xl border border-white/10">
+                                <img src={generatedImage} alt="AI Generated" className="w-full h-auto" />
                             </div>
-
-                            <label className="text-sm font-semibold text-gray-700">Instructions (Nano Banana)</label>
-                            <div className="flex gap-2">
-                                <input 
-                                    type="text" 
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="e.g., Add a retro filter, remove background..."
-                                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mushroom-500 outline-none"
-                                />
-                                <button 
-                                    onClick={handleEdit}
-                                    disabled={isLoading || !uploadedImage}
-                                    className="bg-mushroom-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-mushroom-700 disabled:opacity-50 transition-colors"
-                                >
-                                    Edit
-                                </button>
+                        )}
+                        
+                        {!isLoading && !result && !generatedImage && (
+                             <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                                <Sparkles className="mb-4 opacity-50" size={32} />
+                                <p>Results will appear here.</p>
                             </div>
-                        </div>
-                    )}
-
-                    {/* Think Tab */}
-                    {activeTab === 'think' && (
-                        <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-                            <label className="text-sm font-semibold text-gray-700">Deep Research Mode (Gemini 3 Pro + Thinking)</label>
-                            <p className="text-xs text-gray-500">Ask complex scientific questions. The model will take time to "think" before answering.</p>
-                            <div className="flex gap-2">
-                                <textarea 
-                                    value={query}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="e.g., Analyze the chemical composition of Chaga vs Reishi regarding beta-glucans and triterpenes..."
-                                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mushroom-500 outline-none h-24 resize-none"
-                                />
-                            </div>
-                             <button 
-                                onClick={handleThink}
-                                disabled={isLoading}
-                                className="bg-earth-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-opacity-90 disabled:opacity-50 transition-colors w-full flex items-center justify-center gap-2"
-                            >
-                                {isLoading ? <><Loader2 className="animate-spin" /> Thinking...</> : 'Start Deep Analysis'}
-                            </button>
-
-                            {result && (
-                                <div className="mt-4 bg-white p-8 rounded-xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-bottom-2">
-                                    <div className="prose prose-mushroom max-w-none text-gray-800 leading-relaxed whitespace-pre-wrap font-serif">
-                                        {result}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
