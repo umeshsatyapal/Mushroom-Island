@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Greenlays Agritech | Nature Engineered</title>
+    <title>Mushroom Island | Medicinal Fungi & Wellness</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
     
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -22,15 +22,18 @@
               sans: ['"Manrope"', 'sans-serif'],
             },
             colors: {
+              // Mapping your new colors to the existing variable names
+              // so we don't have to rewrite every component.
               greenlays: {
-                dark: '#052e16',   /* Deep Forest Background */
-                primary: '#0F3D2E',
-                silver: '#E2E8F0', /* Metallic Text */
-                lime: '#84CC16',   /* Neon Accent */
+                dark: '#2A352B',   /* Deep Moss (Background) */
+                primary: '#3F4F41', /* Lighter Moss (Cards/Sections) */
+                silver: '#F3F4F6', /* Soft White (Text) */
+                lime: '#E6C288',   /* Mushroom Gold (Accent/Buttons) - Replaces the Neon Lime */
               }
             },
             backgroundImage: {
-               'hero-radial': 'radial-gradient(circle at 50% 30%, rgba(20, 83, 45, 0.4) 0%, rgba(5, 46, 22, 0.95) 60%, #021108 100%)',
+               // A softer, earthy gradient based on the "Myco" screenshot
+               'hero-radial': 'linear-gradient(to bottom, #536350 0%, #2A352B 100%)',
             }
           }
         }
@@ -38,18 +41,14 @@
     </script>
     
     <style>
-      /* Custom Utilities */
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      
-      /* Essential for Locomotive Scroll */
       html.has-scroll-smooth { overflow: hidden; }
     </style>
   </head>
   
-  <body class="bg-[#021108] text-greenlays-silver font-sans antialiased">
+  <body class="bg-[#2A352B] text-[#F3F4F6] font-sans antialiased">
     <div id="root"></div>
-    
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
