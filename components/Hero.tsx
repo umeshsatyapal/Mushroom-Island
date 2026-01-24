@@ -105,7 +105,7 @@ const Hero: React.FC = () => {
     return (
         <section ref={heroRef} className="relative h-screen flex items-center overflow-hidden bg-[#2A352B]">
             
-            {/* Background Gradient */}
+            {/* Background Gradient - Darker for better blending */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#2A352B] via-[#1a241b] to-[#0d120e] opacity-95 z-0"></div>
 
             {/* Loading Indicator */}
@@ -144,19 +144,23 @@ const Hero: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* RIGHT: Canvas Animation */}
+                    {/* RIGHT: Canvas Animation with Radial Mask */}
                     <div className="relative h-full w-full flex items-center justify-center md:justify-end pointer-events-none">
                         <canvas 
                             ref={canvasRef} 
                             className={`relative z-10 w-auto h-[80vh] max-h-[900px] object-contain transition-opacity duration-1000 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
                             style={{ 
-                                // 1. Use 'lighten' instead of 'screen' (better for removing grey boxes)
+                                // 1. Blend Mode to hide true blacks
                                 mixBlendMode: 'lighten', 
-                                // 2. CRUSH the blacks: Increase contrast so dark-grey becomes pure black
-                                filter: 'contrast(1.1) brightness(0.9)',
-                                // 3. Keep the bottom fade mask
-                                maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
-                                WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
+                                
+                                // 2. High Contrast to force greys into blacks
+                                filter: 'contrast(1.2) brightness(0.8)',
+                                
+                                // 3. THE MAGIC FIX: Radial Mask
+                                // This creates a circular window. Center is visible (black), edges are invisible (transparent).
+                                // It physically cuts off the rectangular border.
+                                maskImage: 'radial-gradient(closest-side, black 60%, transparent 100%)',
+                                WebkitMaskImage: 'radial-gradient(closest-side, black 60%, transparent 100%)'
                             }}
                         />
                     </div>
