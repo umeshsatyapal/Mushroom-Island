@@ -6,13 +6,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // ==========================================
-// ⚠️ FINAL CONFIGURATION (Do not change)
+// ⚠️ FINAL CONFIGURATION
 // ==========================================
 const frameCount = 290; 
 const frameWidth = 1920; 
 const frameHeight = 1012; 
 
-// Path to your frames in the public folder
 const currentFrame = (index: number) => `/frames/ezgif-frame-${index.toString().padStart(3, '0')}.jpg`;
 // ==========================================
 
@@ -24,7 +23,7 @@ const Hero: React.FC = () => {
     const [images, setImages] = useState<HTMLImageElement[]>([]);
 
     // -------------------------------------------
-    // 1. Preload All 290 Images
+    // 1. Preload All Images
     // -------------------------------------------
     useEffect(() => {
         let loadedCount = 0;
@@ -42,7 +41,6 @@ const Hero: React.FC = () => {
                 }
             };
             img.onerror = () => {
-                 console.error(`Failed to load frame ${i}`);
                  loadedCount++;
                  if (loadedCount === frameCount) {
                      setImages(loadedImages);
@@ -107,7 +105,7 @@ const Hero: React.FC = () => {
     return (
         <section ref={heroRef} className="relative h-screen flex items-center overflow-hidden bg-[#2A352B]">
             
-            {/* Background Gradient - Made slightly darker to make the mushroom pop */}
+            {/* Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#2A352B] via-[#1a241b] to-[#0d120e] opacity-95 z-0"></div>
 
             {/* Loading Indicator */}
@@ -146,21 +144,19 @@ const Hero: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* RIGHT: Canvas Animation with Blend Mode */}
+                    {/* RIGHT: Canvas Animation */}
                     <div className="relative h-full w-full flex items-center justify-center md:justify-end pointer-events-none">
-                        {/* UPDATES HERE:
-                           1. Removed 'drop-shadow-2xl' (looks weird with blend mode)
-                           2. Added 'mix-blend-mode: screen' to style
-                        */}
                         <canvas 
                             ref={canvasRef} 
                             className={`relative z-10 w-auto h-[80vh] max-h-[900px] object-contain transition-opacity duration-1000 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
                             style={{ 
-                                // This line makes the black background transparent!
-                                mixBlendMode: 'screen', 
-                                // Kept the bottom fade for a smooth transition into the next section
-                                maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
-                                WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)'
+                                // 1. Use 'lighten' instead of 'screen' (better for removing grey boxes)
+                                mixBlendMode: 'lighten', 
+                                // 2. CRUSH the blacks: Increase contrast so dark-grey becomes pure black
+                                filter: 'contrast(1.1) brightness(0.9)',
+                                // 3. Keep the bottom fade mask
+                                maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+                                WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
                             }}
                         />
                     </div>
