@@ -12,8 +12,7 @@ const frameCount = 290;
 const frameWidth = 1920; 
 const frameHeight = 1012; 
 
-// The code looks for files in public/frames/
-// Example: /frames/ezgif-frame-001.jpg
+// Path to your frames in the public folder
 const currentFrame = (index: number) => `/frames/ezgif-frame-${index.toString().padStart(3, '0')}.jpg`;
 // ==========================================
 
@@ -31,7 +30,6 @@ const Hero: React.FC = () => {
         let loadedCount = 0;
         const loadedImages: HTMLImageElement[] = [];
 
-        // Start loading from frame 1 up to frameCount
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
             img.src = currentFrame(i);
@@ -43,7 +41,6 @@ const Hero: React.FC = () => {
                     setImagesLoaded(true);
                 }
             };
-            // If a single frame fails (e.g., network blip), skip it to prevent crashing
             img.onerror = () => {
                  console.error(`Failed to load frame ${i}`);
                  loadedCount++;
@@ -65,11 +62,9 @@ const Hero: React.FC = () => {
         const context = canvas.getContext('2d');
         if (!context) return;
 
-        // Set high-res dimensions
         canvas.width = frameWidth;
         canvas.height = frameHeight;
 
-        // Draw helper
         const renderFrame = (index: number) => {
             if (images[index]) {
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -77,7 +72,6 @@ const Hero: React.FC = () => {
             }
         };
 
-        // Initial draw
         renderFrame(0);
 
         const sequence = { frame: 0 };
@@ -86,14 +80,13 @@ const Hero: React.FC = () => {
             scrollTrigger: {
                 trigger: heroRef.current,
                 start: "top top",
-                end: "bottom top", // Pin for 100% of viewport height (1 full scroll)
-                scrub: 0.5,        // Smooth scrubbing
-                pin: true,         // Lock the section in place
+                end: "bottom top",
+                scrub: 0.5,
+                pin: true, 
                 anticipatePin: 1,
             },
         });
 
-        // Animate through the frames
         tl.to(sequence, {
             frame: frameCount - 1,
             snap: "frame",
@@ -101,7 +94,6 @@ const Hero: React.FC = () => {
             onUpdate: () => renderFrame(sequence.frame),
         });
         
-        // Text Animation (Fade in)
         gsap.fromTo(textContentRef.current, 
              { opacity: 0, y: 30 },
              { opacity: 1, y: 0, duration: 1, delay: 0.5 }
@@ -115,8 +107,8 @@ const Hero: React.FC = () => {
     return (
         <section ref={heroRef} className="relative h-screen flex items-center overflow-hidden bg-[#2A352B]">
             
-            {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#2A352B] via-[#1f2820] to-[#0d120e] opacity-90 z-0"></div>
+            {/* Background Gradient - Made slightly darker to make the mushroom pop */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#2A352B] via-[#1a241b] to-[#0d120e] opacity-95 z-0"></div>
 
             {/* Loading Indicator */}
             {!imagesLoaded && (
@@ -154,14 +146,21 @@ const Hero: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* RIGHT: Canvas Animation */}
+                    {/* RIGHT: Canvas Animation with Blend Mode */}
                     <div className="relative h-full w-full flex items-center justify-center md:justify-end pointer-events-none">
+                        {/* UPDATES HERE:
+                           1. Removed 'drop-shadow-2xl' (looks weird with blend mode)
+                           2. Added 'mix-blend-mode: screen' to style
+                        */}
                         <canvas 
                             ref={canvasRef} 
-                            className={`relative z-10 w-auto h-[80vh] max-h-[900px] object-contain drop-shadow-2xl transition-opacity duration-1000 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
+                            className={`relative z-10 w-auto h-[80vh] max-h-[900px] object-contain transition-opacity duration-1000 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
                             style={{ 
-                                maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
-                                WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
+                                // This line makes the black background transparent!
+                                mixBlendMode: 'screen', 
+                                // Kept the bottom fade for a smooth transition into the next section
+                                maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
+                                WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)'
                             }}
                         />
                     </div>
