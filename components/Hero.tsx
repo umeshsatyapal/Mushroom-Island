@@ -8,11 +8,16 @@ gsap.registerPlugin(ScrollTrigger);
 // ==========================================
 // ⚠️ FINAL CONFIGURATION
 // ==========================================
-const frameCount = 290; 
-const frameWidth = 1920; 
-const frameHeight = 1012; 
+// 1. Frame Count: 0 to 191 = 192 total frames
+const frameCount = 192; 
 
-const currentFrame = (index: number) => `/frames/ezgif-frame-${index.toString().padStart(3, '0')}.jpg`;
+// 2. Standard 1080p Dimensions
+const frameWidth = 1920; 
+const frameHeight = 1080; 
+
+// 3. EXACT Filename Pattern
+// Matches: "frame_000_delay-0.05s.webp"
+const currentFrame = (index: number) => `/frames/frame_${index.toString().padStart(3, '0')}_delay-0.05s.webp`;
 // ==========================================
 
 const Hero: React.FC = () => {
@@ -29,18 +34,20 @@ const Hero: React.FC = () => {
         let loadedCount = 0;
         const loadedImages: HTMLImageElement[] = [];
 
-        for (let i = 1; i <= frameCount; i++) {
+        // Loop from 0 to 191
+        for (let i = 0; i < frameCount; i++) {
             const img = new Image();
             img.src = currentFrame(i);
             img.onload = () => {
                 loadedCount++;
-                loadedImages[i - 1] = img;
+                loadedImages[i] = img;
                 if (loadedCount === frameCount) {
                     setImages(loadedImages);
                     setImagesLoaded(true);
                 }
             };
             img.onerror = () => {
+                 console.error(`Error loading frame ${i}`);
                  loadedCount++;
                  if (loadedCount === frameCount) {
                      setImages(loadedImages);
@@ -51,7 +58,7 @@ const Hero: React.FC = () => {
     }, []);
 
     // -------------------------------------------
-    // 2. Setup Scroll Sequence
+    // 2. Setup Scroll Animation
     // -------------------------------------------
     useEffect(() => {
         if (!imagesLoaded || !canvasRef.current || images.length === 0) return;
@@ -65,7 +72,9 @@ const Hero: React.FC = () => {
 
         const renderFrame = (index: number) => {
             if (images[index]) {
+                // Clear entire canvas to ensure transparency
                 context.clearRect(0, 0, canvas.width, canvas.height);
+                // Draw new frame
                 context.drawImage(images[index], 0, 0);
             }
         };
@@ -93,8 +102,8 @@ const Hero: React.FC = () => {
         });
         
         gsap.fromTo(textContentRef.current, 
-             { opacity: 0, y: 30 },
-             { opacity: 1, y: 0, duration: 1, delay: 0.5 }
+             { opacity: 0, x: -50 },
+             { opacity: 1, x: 0, duration: 1, delay: 0.5 }
         );
 
         return () => {
@@ -105,10 +114,10 @@ const Hero: React.FC = () => {
     return (
         <section ref={heroRef} className="relative h-screen flex items-center overflow-hidden bg-[#2A352B]">
             
-            {/* Background Gradient - Darker for better blending */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#2A352B] via-[#1a241b] to-[#0d120e] opacity-95 z-0"></div>
+            {/* Background Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#2A352B] via-[#1a241b] to-[#0d120e] opacity-100 z-0"></div>
 
-            {/* Loading Indicator */}
+            {/* Loading Screen */}
             {!imagesLoaded && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#2A352B]">
                     <div className="flex flex-col items-center gap-4">
@@ -121,10 +130,15 @@ const Hero: React.FC = () => {
             )}
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 h-full relative">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center h-full">
+                {/* GRID LAYOUT EXPLAINED:
+                   grid-cols-2 splits the screen in half.
+                   - Div 1 (Text): Goes to Left
+                   - Div 2 (Canvas): Goes to Right
+                */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 h-full">
                     
                     {/* LEFT: Text Content */}
-                    <div ref={textContentRef} className="relative z-20 pt-10 md:pt-0 opacity-0">
+                    <div ref={textContentRef} className="relative z-20 flex flex-col justify-center h-full opacity-0 pl-4 md:pl-0">
                         <span className="block text-[#E6C288] font-bold tracking-[0.2em] uppercase mb-4 text-sm animate-pulse">
                             Rare. Wild. Potent.
                         </span>
@@ -138,30 +152,22 @@ const Hero: React.FC = () => {
                             Scroll to witness the magnificent growth of our medicinal fungi. Cultivated with precision to unlock their full potential.
                         </p>
                         
-                        <button className="group bg-[#E6C288] text-[#2A352B] px-10 py-4 rounded-full font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(230,194,136,0.3)] hover:shadow-[0_0_40px_rgba(230,194,136,0.6)] hover:scale-105 transition-all duration-300 flex items-center gap-3">
-                            Start the Ritual
-                            <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                        </button>
+                        <div>
+                            <button className="group bg-[#E6C288] text-[#2A352B] px-10 py-4 rounded-full font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(230,194,136,0.3)] hover:shadow-[0_0_40px_rgba(230,194,136,0.6)] hover:scale-105 transition-all duration-300 flex items-center gap-3">
+                                Start the Ritual
+                                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        </div>
                     </div>
 
-                    {/* RIGHT: Canvas Animation with Radial Mask */}
-                    <div className="relative h-full w-full flex items-center justify-center md:justify-end pointer-events-none">
+                    {/* RIGHT: Canvas Animation 
+                        - 'justify-end' pushes the mushroom to the far right edge.
+                        - 'translate-x' nudges it further if you want it off-center.
+                    */}
+                    <div className="relative h-full w-full flex items-center justify-end pointer-events-none">
                         <canvas 
                             ref={canvasRef} 
-                            className={`relative z-10 w-auto h-[80vh] max-h-[900px] object-contain transition-opacity duration-1000 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
-                            style={{ 
-                                // 1. Blend Mode to hide true blacks
-                                mixBlendMode: 'lighten', 
-                                
-                                // 2. High Contrast to force greys into blacks
-                                filter: 'contrast(1.2) brightness(0.8)',
-                                
-                                // 3. THE MAGIC FIX: Radial Mask
-                                // This creates a circular window. Center is visible (black), edges are invisible (transparent).
-                                // It physically cuts off the rectangular border.
-                                maskImage: 'radial-gradient(closest-side, black 60%, transparent 100%)',
-                                WebkitMaskImage: 'radial-gradient(closest-side, black 60%, transparent 100%)'
-                            }}
+                            className={`relative z-10 w-full md:w-[130%] h-auto object-contain transition-opacity duration-1000 translate-x-10 md:translate-x-20 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />
                     </div>
                 </div>
