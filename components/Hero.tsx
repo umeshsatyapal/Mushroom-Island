@@ -8,15 +8,11 @@ gsap.registerPlugin(ScrollTrigger);
 // ==========================================
 // ⚠️ FINAL CONFIGURATION
 // ==========================================
-// 1. Frame Count: 0 to 191 = 192 total frames
 const frameCount = 192; 
-
-// 2. Standard 1080p Dimensions
+// Keep internal resolution high for quality
 const frameWidth = 1920; 
 const frameHeight = 1080; 
 
-// 3. EXACT Filename Pattern
-// Matches: "frame_000_delay-0.05s.webp"
 const currentFrame = (index: number) => `/frames/frame_${index.toString().padStart(3, '0')}_delay-0.05s.webp`;
 // ==========================================
 
@@ -27,14 +23,11 @@ const Hero: React.FC = () => {
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
 
-    // -------------------------------------------
-    // 1. Preload All Images
-    // -------------------------------------------
+    // 1. Preload Images
     useEffect(() => {
         let loadedCount = 0;
         const loadedImages: HTMLImageElement[] = [];
 
-        // Loop from 0 to 191
         for (let i = 0; i < frameCount; i++) {
             const img = new Image();
             img.src = currentFrame(i);
@@ -47,7 +40,6 @@ const Hero: React.FC = () => {
                 }
             };
             img.onerror = () => {
-                 console.error(`Error loading frame ${i}`);
                  loadedCount++;
                  if (loadedCount === frameCount) {
                      setImages(loadedImages);
@@ -57,9 +49,7 @@ const Hero: React.FC = () => {
         }
     }, []);
 
-    // -------------------------------------------
     // 2. Setup Scroll Animation
-    // -------------------------------------------
     useEffect(() => {
         if (!imagesLoaded || !canvasRef.current || images.length === 0) return;
 
@@ -72,9 +62,8 @@ const Hero: React.FC = () => {
 
         const renderFrame = (index: number) => {
             if (images[index]) {
-                // Clear entire canvas to ensure transparency
+                // CRITICAL: Clear canvas to guarantee transparency before drawing
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                // Draw new frame
                 context.drawImage(images[index], 0, 0);
             }
         };
@@ -130,11 +119,6 @@ const Hero: React.FC = () => {
             )}
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 h-full relative">
-                {/* GRID LAYOUT EXPLAINED:
-                   grid-cols-2 splits the screen in half.
-                   - Div 1 (Text): Goes to Left
-                   - Div 2 (Canvas): Goes to Right
-                */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-0 h-full">
                     
                     {/* LEFT: Text Content */}
@@ -160,14 +144,16 @@ const Hero: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* RIGHT: Canvas Animation 
-                        - 'justify-end' pushes the mushroom to the far right edge.
-                        - 'translate-x' nudges it further if you want it off-center.
-                    */}
-                    <div className="relative h-full w-full flex items-center justify-end pointer-events-none">
+                    {/* RIGHT: Canvas Animation (Tall & Transparent) */}
+                    {/* 'items-center' centers it vertically. 'justify-center' centers horizontally in column */}
+                    <div className="relative h-full w-full flex items-center justify-center pointer-events-none">
                         <canvas 
                             ref={canvasRef} 
-                            className={`relative z-10 w-full md:w-[130%] h-auto object-contain transition-opacity duration-1000 translate-x-10 md:translate-x-20 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
+                            // ⬇️ CSS FIXES HERE:
+                            // h-full w-auto: Makes it tall, width adjusts automatically (no stretching).
+                            // max-h-screen: Ensures it doesn't get taller than the screen.
+                            // bg-transparent: Explicitly removes any white background.
+                            className={`relative z-10 h-full w-auto max-h-screen object-contain transition-opacity duration-1000 bg-transparent ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />
                     </div>
                 </div>
