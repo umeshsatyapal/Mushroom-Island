@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ProductSection from './components/ProductSection'; // <--- The missing piece!
+import ProductList from './components/ProductList'; // <--- FIXED: Matching your file name
 import MidSection from './components/MidSection';
 import Footer from './components/Footer';
 
@@ -11,7 +11,8 @@ function App() {
       <Navbar />
       <main>
         <Hero />
-        <ProductSection /> {/* Placed in the middle as requested */}
+        {/* We use the component from your ProductList.tsx file here */}
+        <ProductList /> 
         <MidSection />
       </main>
       <Footer />
