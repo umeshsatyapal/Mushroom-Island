@@ -16,12 +16,16 @@ const Navbar: React.FC = () => {
                 <a href="#" className="hover:text-white transition-colors">Learn</a>
             </div>
 
-            {/* Center: Logo */}
+            {/* Center: Logo Image */}
             <div className="absolute left-1/2 transform -translate-x-1/2">
-                {/* You can replace this text with your Logo Image later */}
-                <span className="text-xl md:text-2xl font-serif font-bold text-white tracking-widest uppercase">
-                    Mushroom Island
-                </span>
+                <img 
+                    src="https://awakenedtemplates.com/myco/wp-content/uploads/sites/29/2025/12/myco-logo.png" 
+                    alt="myco logo"
+                    // We use Tailwind classes for responsive height instead of fixed attributes
+                    // h-10 (40px) on mobile, h-12 (48px) on medium screens and up.
+                    // w-auto ensures the aspect ratio is maintained.
+                    className="h-10 md:h-12 w-auto object-contain"
+                />
             </div>
 
             {/* Right: Cart & Utilities */}
