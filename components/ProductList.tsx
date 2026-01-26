@@ -1,113 +1,108 @@
-import React, { useState } from 'react';
-import { ShoppingBag, Minus, Plus, Check } from 'lucide-react';
+import React from 'react';
+
+const products = [
+    {
+        id: 1,
+        name: "Cordyceps Flowers: Protected",
+        price: 2499, // Realistic INR price
+        salePrice: null,
+        // Using a Cordyceps-like placeholder image
+        image: "https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?q=80&w=1974&auto=format&fit=crop", 
+        isSale: false
+    },
+    {
+        id: 2,
+        name: "Chaga: Strength From Within",
+        price: 1499,
+        salePrice: null,
+        // Using a Chaga-like placeholder image
+        image: "https://images.unsplash.com/photo-1576673442511-7e39b6545c87?q=80&w=2034&auto=format&fit=crop",
+        isSale: false
+    },
+    {
+        id: 3,
+        name: "Ginger: Awaken Inner Warmth",
+        price: 1499,
+        salePrice: 899,
+        // Using a Ginger root placeholder
+        image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?q=80&w=2080&auto=format&fit=crop",
+        isSale: true
+    },
+    {
+        id: 4,
+        name: "Astragalus: Rooted In Strength",
+        price: 1699,
+        salePrice: 1099,
+        // Using a Root/Bark placeholder
+        image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=2080&auto=format&fit=crop",
+        isSale: true
+    }
+];
 
 const ProductList: React.FC = () => {
-    const [quantity, setQuantity] = useState(1);
-
-    const handleQuantity = (type: 'inc' | 'dec') => {
-        if (type === 'dec' && quantity > 1) setQuantity(quantity - 1);
-        if (type === 'inc') setQuantity(quantity + 1);
-    };
-
     return (
-        <section className="py-24 bg-[#F9F8F6] text-[#2A352B]" id="shop">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                    
-                    {/* LEFT: Product Image Area */}
-                    <div className="relative group">
-                        {/* Background Decorative Circle */}
-                        <div className="absolute inset-0 bg-[#E6C288]/20 rounded-full transform scale-90 blur-3xl group-hover:scale-105 transition-transform duration-700"></div>
+        <section className="py-24 bg-white text-[#2A352B]" id="shop">
+            
+            {/* 1. Intro Text Section */}
+            <div className="max-w-4xl mx-auto px-6 text-center mb-20">
+                <p className="text-xl md:text-2xl font-serif leading-relaxed text-gray-900">
+                    Our formulas begin in the wild—potent mushrooms and adaptogens refined into 
+                    modern rituals for clarity, balance, and grounded energy. 
+                    <br className="hidden md:block" />
+                    Nature’s depth, distilled into everyday magic.
+                </p>
+            </div>
+
+            {/* 2. Product Grid (4 Columns) */}
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+                {products.map((product) => (
+                    <div key={product.id} className="group flex flex-col">
                         
-                        <div className="relative z-10 bg-white p-12 rounded-sm shadow-xl border border-[#E6C288]/20 flex items-center justify-center h-[500px]">
-                            {/* Placeholder for Product Image */}
+                        {/* Image Container */}
+                        <div className="relative bg-[#F4F4F4] aspect-square flex items-center justify-center mb-6 overflow-hidden">
+                            {/* Sale Badge */}
+                            {product.isSale && (
+                                <span className="absolute top-4 right-4 bg-[#3E3E20] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest z-10">
+                                    Sale!
+                                </span>
+                            )}
+                            
+                            {/* Product Image */}
                             <img 
-                                src="https://images.unsplash.com/photo-1615485925763-867862f80903?q=80&w=1974&auto=format&fit=crop" 
-                                alt="Mushroom Extract Bottle" 
-                                className="max-h-full object-contain drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-500"
+                                src={product.image} 
+                                alt={product.name}
+                                className="w-[80%] h-[80%] object-contain mix-blend-multiply filter contrast-110 group-hover:scale-105 transition-transform duration-500 ease-out"
                             />
-                            {/* Floating Tag */}
-                            <div className="absolute top-6 right-6 bg-[#C85515] text-white text-xs font-bold px-3 py-1 uppercase tracking-widest rounded-full">
-                                Best Seller
-                            </div>
                         </div>
-                    </div>
 
-                    {/* RIGHT: Product Details */}
-                    <div>
-                        <h3 className="text-[#C85515] font-bold tracking-[0.2em] uppercase text-sm mb-4">
-                            Pure Extract
+                        {/* Title */}
+                        <h3 className="text-[15px] font-serif text-gray-900 mb-2 leading-tight">
+                            {product.name}
                         </h3>
-                        <h2 className="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight">
-                            Lion's Mane <br/>
-                            <span className="italic text-[#E6C288]">Focus Blend</span>
-                        </h2>
-                        
-                        <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                            Unlock your brain's potential with our dual-extracted Lion's Mane. 
-                            Grown on our own farms, processed in-house, and tested for maximum potency. 
-                            The ultimate daily ritual for clarity and memory.
-                        </p>
 
-                        {/* Price & Rating */}
-                        <div className="flex items-center gap-6 mb-8">
-                            <span className="text-3xl font-bold text-[#2A352B]">$49.00</span>
-                            <div className="flex items-center gap-1">
-                                <span className="flex text-[#C85515]">★★★★★</span>
-                                <span className="text-sm text-gray-400">(128 Reviews)</span>
-                            </div>
+                        {/* Price */}
+                        <div className="text-sm font-medium mb-5 text-gray-800">
+                            {product.isSale ? (
+                                <div className="flex gap-2">
+                                    <span className="text-gray-400 line-through decoration-1">
+                                        ₹{product.price.toLocaleString('en-IN')}
+                                    </span>
+                                    <span className="font-bold border-b-2 border-[#E6C288]/50">
+                                        ₹{product.salePrice?.toLocaleString('en-IN')}
+                                    </span>
+                                </div>
+                            ) : (
+                                <span>₹{product.price.toLocaleString('en-IN')}</span>
+                            )}
                         </div>
 
-                        {/* Benefits List */}
-                        <ul className="space-y-3 mb-10 text-gray-700">
-                            <li className="flex items-center gap-3">
-                                <div className="w-5 h-5 rounded-full bg-[#E6C288]/30 flex items-center justify-center text-[#C85515]">
-                                    <Check size={12} strokeWidth={3} />
-                                </div>
-                                Enhances memory and focus
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <div className="w-5 h-5 rounded-full bg-[#E6C288]/30 flex items-center justify-center text-[#C85515]">
-                                    <Check size={12} strokeWidth={3} />
-                                </div>
-                                Supports nerve health (NGF)
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <div className="w-5 h-5 rounded-full bg-[#E6C288]/30 flex items-center justify-center text-[#C85515]">
-                                    <Check size={12} strokeWidth={3} />
-                                </div>
-                                100% Fruiting Body (No Fillers)
-                            </li>
-                        </ul>
+                        {/* 'Add to Cart' Button */}
+                        <button className="mt-auto w-max bg-[#0F281E] text-white text-xs font-bold uppercase tracking-widest px-8 py-3 hover:bg-[#1a4030] transition-colors duration-300">
+                            Add to cart
+                        </button>
 
-                        {/* Add to Cart Controls */}
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            {/* Quantity Selector */}
-                            <div className="flex items-center border border-gray-300 rounded-full w-max">
-                                <button 
-                                    onClick={() => handleQuantity('dec')}
-                                    className="px-4 py-3 hover:text-[#C85515] transition-colors"
-                                >
-                                    <Minus size={16} />
-                                </button>
-                                <span className="w-8 text-center font-bold">{quantity}</span>
-                                <button 
-                                    onClick={() => handleQuantity('inc')}
-                                    className="px-4 py-3 hover:text-[#C85515] transition-colors"
-                                >
-                                    <Plus size={16} />
-                                </button>
-                            </div>
-
-                            {/* Main Button */}
-                            <button className="flex-1 bg-[#2A352B] text-[#E6C288] px-8 py-3 rounded-full font-bold uppercase tracking-wider hover:bg-[#1a241b] transition-all duration-300 shadow-lg flex items-center justify-center gap-3">
-                                <ShoppingBag size={20} />
-                                Add to Cart — ${(49 * quantity).toFixed(2)}
-                            </button>
-                        </div>
                     </div>
-
-                </div>
+                ))}
             </div>
         </section>
     );
