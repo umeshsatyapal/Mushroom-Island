@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingBag, Minus, Plus, Check } from 'lucide-react';
 
-const ProductSection: React.FC = () => {
+const ProductList: React.FC = () => {
     const [quantity, setQuantity] = useState(1);
 
     const handleQuantity = (type: 'inc' | 'dec') => {
@@ -113,4 +113,4 @@ const ProductSection: React.FC = () => {
     );
 };
 
-export default ProductSection;
+export default ProductList;
