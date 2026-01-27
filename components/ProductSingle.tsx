@@ -13,7 +13,6 @@ const ProductSingle: React.FC = () => {
     const [quantity, setQuantity] = useState(1);
 
     return (
-        // FIXED: Changed background to Brand Emerald (#2A352B)
         <div className="bg-[#2A352B] min-h-screen pt-20">
             
             {/* SECTION 1: PRODUCT DETAIL */}
@@ -59,7 +58,6 @@ const ProductSingle: React.FC = () => {
                         </div>
 
                         {/* Testimonial Card */}
-                        {/* FIXED: Changed to darker green (#1a241b) to contrast nicely with Emerald bg */}
                         <div className="bg-[#1a241b] p-6 rounded-[2px] mt-8 flex gap-6 items-center shadow-lg border border-white/5">
                             <div className="flex-1">
                                 <p className="font-serif italic text-lg leading-snug mb-4 text-gray-200">
@@ -76,7 +74,7 @@ const ProductSingle: React.FC = () => {
                 </div>
             </div>
 
-            {/* SECTION 2: RELATED PRODUCTS (White Background) */}
+            {/* SECTION 2: RELATED PRODUCTS */}
             <div className="bg-white py-24 text-[#2A352B]">
                 <div className="max-w-7xl mx-auto px-6">
                     <h2 className="text-3xl font-serif mb-12">Others also liked these</h2>
@@ -107,12 +105,10 @@ const ProductSingle: React.FC = () => {
                 </div>
             </div>
 
-            {/* SECTION 3: FEATURES (Background Image) */}
+            {/* SECTION 3: FEATURES */}
             <div className="relative py-32 bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1520206183501-b80df61043c2?q=80&w=1974&auto=format&fit=crop')" }}>
-                <div className="absolute inset-0 bg-black/20"></div> {/* Overlay to darken slightly */}
+                <div className="absolute inset-0 bg-black/20"></div> 
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
-                    
-                    {/* Floating Cards Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                          {/* Card 1 */}
                          <div className="bg-white p-8 rounded-[2px] relative md:mt-0">
@@ -124,7 +120,6 @@ const ProductSingle: React.FC = () => {
                                 Helps clear mental fog and sharpen attention throughout the day. Feel present, grounded, and mentally aligned with ease.
                             </p>
                          </div>
-
                          {/* Card 2 */}
                          <div className="bg-white p-8 rounded-[2px] relative md:mt-24">
                             <div className="absolute -left-3 top-8 w-6 h-6 bg-[#0F281E] rounded-full flex items-center justify-center border-4 border-white">
@@ -135,7 +130,6 @@ const ProductSingle: React.FC = () => {
                                 Steady, clean vitality that supports your day without spikes or crashes. Calm, dependable strength you can return to daily.
                             </p>
                          </div>
-
                          {/* Card 3 */}
                          <div className="bg-white p-8 rounded-[2px] relative md:mt-12">
                             <div className="absolute -left-3 top-8 w-6 h-6 bg-[#0F281E] rounded-full flex items-center justify-center border-4 border-white">
@@ -146,25 +140,6 @@ const ProductSingle: React.FC = () => {
                                 Supports your body's natural balance over time and change. Helping you adapt, restore, and stay centered with ease.
                             </p>
                          </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* SECTION 4: NEWSLETTER & FOOTER */}
-            <div className="bg-[#2A352B] text-white py-20 border-b border-[#E6C288]/10">
-                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <div>
-                         <img src="https://images.unsplash.com/photo-1515023115689-589c33041697?q=80&w=1974&auto=format&fit=crop" className="w-full h-64 object-cover rounded-[2px] opacity-80" />
-                    </div>
-                    <div>
-                        <h2 className="font-serif text-4xl text-[#E6C288] mb-4">Stay Connected</h2>
-                        <p className="text-gray-300 mb-8">Join for rituals, botanical education, and early access to limited seasonal blends.</p>
-                        <div className="space-y-4">
-                            <input type="email" placeholder="Insert your email here" className="w-full bg-transparent border-b border-white/30 py-3 focus:outline-none focus:border-[#E6C288] text-white" />
-                            <button className="w-full bg-[#0F281E] text-white py-4 font-bold uppercase tracking-widest hover:bg-[#1a4030] transition-colors">
-                                Join the Ritual
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
