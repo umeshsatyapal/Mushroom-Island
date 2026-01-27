@@ -4,30 +4,36 @@ import Hero from './components/Hero';
 import ProductList from './components/ProductList';
 import MidSection from './components/MidSection';
 import Footer from './components/Footer';
-import Shop from './components/Shop'; // Import the new page
+import Shop from './components/Shop'; 
+import ProductSingle from './components/ProductSingle'; // <--- Import New Component
 
 function App() {
-  // State to track which page is visible
-  const [currentPage, setCurrentPage] = useState<'home' | 'shop'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product-single'>('home');
 
   return (
     <div className="min-h-screen bg-[#2A352B]">
-      {/* Navbar gets the function to change pages */}
+      {/* Navbar with navigation logic */}
       <Navbar onNavigate={setCurrentPage} />
 
-      {/* CONDITIONAL RENDERING: Show Home OR Shop */}
-      {currentPage === 'home' ? (
+      {/* PAGE ROUTING */}
+      {currentPage === 'home' && (
         <main>
           <Hero />
-          {/* This ProductList is the 4-column teaser on the homepage */}
           <ProductList /> 
           <MidSection />
           <Footer />
         </main>
-      ) : (
+      )}
+
+      {currentPage === 'shop' && (
         <main>
-          {/* This is the FULL Shop Page */}
           <Shop />
+        </main>
+      )}
+
+      {currentPage === 'product-single' && (
+        <main>
+          <ProductSingle />
         </main>
       )}
     </div>
