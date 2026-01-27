@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ArrowRight, Star } from 'lucide-react';
+import { Check, Star } from 'lucide-react';
 import Footer from './Footer';
 
 const products = [
@@ -13,17 +13,16 @@ const products = [
 
 const Shop: React.FC = () => {
     return (
-        // FIXED: Changed main background to #2A352B so the top navbar area is green, not white
         <div className="bg-[#2A352B] min-h-screen pt-20">
             
-            {/* 1. HERO HEADER */}
+            {/* HERO HEADER */}
             <div className="bg-[#2A352B] text-white py-24 text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
                 <h1 className="relative z-10 text-5xl md:text-7xl font-serif mb-4">Welcome to ritual.</h1>
                 <p className="relative z-10 text-[#E6C288] uppercase tracking-widest text-sm font-bold">Rare. Wild. Potent.</p>
             </div>
 
-            {/* 2. SHOP CONTENT AREA (Wrapped in white to maintain original design) */}
+            {/* SHOP CONTENT AREA */}
             <div className="bg-white w-full">
                 <div className="max-w-7xl mx-auto px-6 py-16">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
@@ -80,7 +79,7 @@ const Shop: React.FC = () => {
                 </div>
             </div>
 
-            {/* 3. SUBSCRIBE SECTION */}
+            {/* SUBSCRIBE SECTION */}
             <section className="bg-[#F9F8F6] py-20">
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                     <div>
@@ -112,7 +111,7 @@ const Shop: React.FC = () => {
                 </div>
             </section>
 
-            {/* 4. TESTIMONIALS */}
+            {/* TESTIMONIALS */}
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="bg-[#F9F8F6] p-10 relative">
@@ -138,18 +137,6 @@ const Shop: React.FC = () => {
                 </div>
             </section>
 
-            {/* 5. NEWSLETTER */}
-            <div className="bg-[#2A352B] text-white py-16">
-                 <div className="max-w-4xl mx-auto px-6 text-center">
-                    <h2 className="font-serif text-3xl md:text-4xl mb-4 text-[#E6C288]">Stay Connected</h2>
-                    <p className="text-gray-300 mb-8 max-w-lg mx-auto">Join for rituals, botanical education, and early access to limited seasonal blends.</p>
-                    <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
-                        <input type="email" placeholder="Insert your email here" className="flex-1 px-4 py-3 text-black focus:outline-none" />
-                        <button className="bg-[#0F281E] text-white px-6 py-3 font-bold uppercase border border-[#0F281E] hover:bg-[#E6C288] hover:text-[#0F281E] transition-colors">Join the Ritual</button>
-                    </div>
-                 </div>
-            </div>
-            
             <Footer />
         </div>
     );
