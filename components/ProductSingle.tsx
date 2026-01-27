@@ -13,8 +13,8 @@ const ProductSingle: React.FC = () => {
     const [quantity, setQuantity] = useState(1);
 
     return (
-        // Main Container - Sage Green Background to match screenshot
-        <div className="bg-[#6F7668] min-h-screen pt-20">
+        // FIXED: Changed background to Brand Emerald (#2A352B)
+        <div className="bg-[#2A352B] min-h-screen pt-20">
             
             {/* SECTION 1: PRODUCT DETAIL */}
             <div className="max-w-7xl mx-auto px-6 py-12 lg:py-20 text-white">
@@ -59,13 +59,14 @@ const ProductSingle: React.FC = () => {
                         </div>
 
                         {/* Testimonial Card */}
-                        <div className="bg-[#4A5046] p-6 rounded-[2px] mt-8 flex gap-6 items-center">
+                        {/* FIXED: Changed to darker green (#1a241b) to contrast nicely with Emerald bg */}
+                        <div className="bg-[#1a241b] p-6 rounded-[2px] mt-8 flex gap-6 items-center shadow-lg border border-white/5">
                             <div className="flex-1">
-                                <p className="font-serif italic text-lg leading-snug mb-4">
+                                <p className="font-serif italic text-lg leading-snug mb-4 text-gray-200">
                                     "Such an easy ritual to keep. Calmer mood, better focus, and it actually tastes surprisingly delicious."
                                 </p>
                                 <div>
-                                    <h5 className="font-bold text-sm">Mary</h5>
+                                    <h5 className="font-bold text-sm text-[#E6C288]">Mary</h5>
                                     <span className="text-xs opacity-60">Miami, FL</span>
                                 </div>
                             </div>
