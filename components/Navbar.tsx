@@ -1,7 +1,6 @@
 import React from 'react';
 import { ShoppingBag, Menu } from 'lucide-react';
 
-// Define Props so Navbar can talk to App.tsx
 interface NavbarProps {
     onNavigate: (page: 'home' | 'shop') => void;
 }
@@ -18,8 +17,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                     <Menu className="w-6 h-6" />
                 </div>
 
-                {/* LINKS: Added onClick to switch pages */}
+                {/* LINKS: Added 'Home' button first */}
                 <div className="hidden md:flex gap-8 text-xs font-bold tracking-[0.2em] uppercase">
+                    <button 
+                        onClick={() => onNavigate('home')} 
+                        className="hover:text-white transition-colors uppercase tracking-[0.2em]"
+                    >
+                        Home
+                    </button>
                     <button 
                         onClick={() => onNavigate('shop')} 
                         className="hover:text-white transition-colors uppercase tracking-[0.2em]"
@@ -40,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                     </button>
                 </div>
 
-                {/* LOGO: Clicks go to Home */}
+                {/* LOGO */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 text-center whitespace-nowrap cursor-pointer" onClick={() => onNavigate('home')}>
                     <span 
                         style={{ fontFamily: '"Kaushan Script", cursive' }} 
@@ -50,6 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                     </span>
                 </div>
 
+                {/* CART */}
                 <div className="flex items-center gap-6">
                     <span className="hidden md:block text-xs font-bold tracking-[0.2em] uppercase text-green-400 flex items-center gap-2">
                         <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
