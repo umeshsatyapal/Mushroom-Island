@@ -18,19 +18,44 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                 </div>
 
                 {/* LEFT: Navigation Links */}
-                <div className="hidden md:flex gap-8 text-xs font-bold tracking-[0.2em] uppercase">
+                <div className="hidden md:flex gap-8 text-xs font-bold tracking-[0.2em] uppercase items-center">
                     <button 
                         onClick={() => onNavigate('home')} 
                         className="hover:text-white transition-colors uppercase tracking-[0.2em]"
                     >
                         Home
                     </button>
-                    <button 
-                        onClick={() => onNavigate('shop')} 
-                        className="hover:text-white transition-colors uppercase tracking-[0.2em]"
-                    >
-                        Shop
-                    </button>
+
+                    {/* SHOP DROPDOWN WRAPPER */}
+                    <div className="relative group py-2">
+                        <button 
+                            onClick={() => onNavigate('shop')} 
+                            className="hover:text-white transition-colors uppercase tracking-[0.2em]"
+                        >
+                            Shop
+                        </button>
+
+                        {/* THE DROPDOWN MENU */}
+                        {/* 1. Invisible/Opacity transition for smooth effect */}
+                        {/* 2. bg-[#FFC470] matches the Cart Button exactly */}
+                        <div className="absolute top-full left-0 mt-0 w-48 bg-[#FFC470] shadow-lg rounded-[2px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <div className="flex flex-col py-2 text-[#0F281E] normal-case tracking-normal font-sans font-medium text-sm">
+                                <a href="#" className="px-6 py-2 hover:bg-white/20 transition-colors block text-left">
+                                    Product Single
+                                </a>
+                                <a href="#" className="px-6 py-2 hover:bg-white/20 transition-colors block text-left">
+                                    Cart
+                                </a>
+                                <a href="#" className="px-6 py-2 hover:bg-white/20 transition-colors block text-left">
+                                    Checkout
+                                </a>
+                                <a href="#" className="px-6 py-2 hover:bg-white/20 transition-colors block text-left">
+                                    My account
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <button 
                         onClick={() => onNavigate('home')} 
                         className="hover:text-white transition-colors uppercase tracking-[0.2em]"
@@ -55,9 +80,8 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                     </span>
                 </div>
 
-                {/* RIGHT: New Utilities Layout (Matches your 'Myco' sample) */}
+                {/* RIGHT: Utilities */}
                 <div className="flex items-center gap-6 font-sans">
-                    {/* Text Links */}
                     <a href="#" className="hidden md:block text-white text-sm font-medium hover:text-[#E6C288] transition-colors">
                         Get 10% off
                     </a>
@@ -65,12 +89,11 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                         Login
                     </a>
 
-                    {/* Cart Button */}
+                    {/* Cart Button (Target Color: #FFC470) */}
                     <button className="bg-[#FFC470] text-[#1a241b] px-4 py-2 rounded-[2px] font-medium flex items-center gap-3 hover:bg-[#E6C288] transition-colors shadow-md">
                         <span>₹0.00</span>
                         <div className="relative">
                             <ShoppingCart size={18} />
-                            {/* Badge */}
                             <span className="absolute -top-2 -right-2 bg-[#0F281E] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                                 0
                             </span>
