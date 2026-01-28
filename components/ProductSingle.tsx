@@ -1,15 +1,30 @@
 import React, { useState } from 'react';
-import { Search, ShoppingCart, Minus, Plus } from 'lucide-react';
+import { Search, Minus, Plus } from 'lucide-react';
 import Footer from './Footer';
+import AddToCartButton from './AddToCartButton'; // Import the smart button
 
+// Define Props
+interface ProductSingleProps {
+    onNavigate: (page: 'home' | 'shop' | 'product-single' | 'cart') => void;
+}
+
+// Data for the MAIN product shown at the top
+const mainProduct = {
+    id: 5, 
+    name: "Reishi: Drift Into Calmness", 
+    price: 1699, // Current selling price
+    image: "https://images.unsplash.com/photo-1596483789033-288219463c22?q=80&w=1974&auto=format&fit=crop"
+};
+
+// Data for Related Products
 const relatedProducts = [
-    { id: 1, name: "Cordyceps Flowers: Protected", price: 2499, image: "https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?q=80&w=1974&auto=format&fit=crop" },
-    { id: 2, name: "Chaga: Strength From Within", price: 1499, image: "https://images.unsplash.com/photo-1576673442511-7e39b6545c87?q=80&w=2034&auto=format&fit=crop" },
+    { id: 1, name: "Cordyceps Flowers: Protected", price: 2499, salePrice: null, image: "https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?q=80&w=1974&auto=format&fit=crop" },
+    { id: 2, name: "Chaga: Strength From Within", price: 1499, salePrice: null, image: "https://images.unsplash.com/photo-1576673442511-7e39b6545c87?q=80&w=2034&auto=format&fit=crop" },
     { id: 3, name: "Ginger: Awaken Inner Warmth", price: 1499, salePrice: 899, image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?q=80&w=2080&auto=format&fit=crop", sale: true },
     { id: 4, name: "Astragalus: Rooted In Strength", price: 1699, salePrice: 1099, image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=2080&auto=format&fit=crop", sale: true }
 ];
 
-const ProductSingle: React.FC = () => {
+const ProductSingle: React.FC<ProductSingleProps> = ({ onNavigate }) => {
     const [quantity, setQuantity] = useState(1);
 
     return (
@@ -25,8 +40,8 @@ const ProductSingle: React.FC = () => {
                              <Search size={24} />
                         </div>
                         <img 
-                            src="https://images.unsplash.com/photo-1596483789033-288219463c22?q=80&w=1974&auto=format&fit=crop" 
-                            alt="Reishi" 
+                            src={mainProduct.image} 
+                            alt={mainProduct.name} 
                             className="w-[80%] h-[80%] object-contain mix-blend-multiply"
                         />
                     </div>
@@ -45,16 +60,24 @@ const ProductSingle: React.FC = () => {
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
                         </p>
 
-                        {/* Add to Cart Area */}
+                        {/* ACTION AREA */}
                         <div className="flex gap-4">
-                            <div className="bg-white text-[#2A352B] flex items-center px-4 rounded-[2px] h-12">
+                            {/* Quantity Selector (Visual only for now, keeps UI intact) */}
+                            <div className="bg-white text-[#2A352B] flex items-center px-4 rounded-[2px] h-auto">
                                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus size={14}/></button>
                                 <span className="w-10 text-center font-bold">{quantity}</span>
                                 <button onClick={() => setQuantity(quantity + 1)}><Plus size={14}/></button>
                             </div>
-                            <button className="flex-1 bg-[#C85515] hover:bg-[#A04411] text-white font-bold uppercase tracking-widest text-sm rounded-[2px] h-12 transition-colors">
-                                Add to cart
-                            </button>
+                            
+                            {/* SMART ADD TO CART BUTTON (Orange Variant) */}
+                            {/* We use flex-1 to make it stretch like the original design */}
+                            <div className="flex-1"> 
+                                <AddToCartButton 
+                                    product={mainProduct}
+                                    onNavigate={onNavigate}
+                                    variant="secondary" // Orange style
+                                />
+                            </div>
                         </div>
 
                         {/* Testimonial Card */}
@@ -80,12 +103,14 @@ const ProductSingle: React.FC = () => {
                     <h2 className="text-3xl font-serif mb-12">Others also liked these</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {relatedProducts.map((product) => (
-                            <div key={product.id} className="group">
-                                <div className="bg-[#F4F4F4] aspect-square flex items-center justify-center mb-6 relative">
+                            <div key={product.id} className="group flex flex-col h-full">
+                                <div className="relative bg-[#F4F4F4] aspect-square flex items-center justify-center mb-6 relative">
                                     {product.salePrice && <span className="absolute top-2 right-2 bg-[#3E3E20] text-white text-[10px] font-bold px-2 py-1 uppercase">Sale!</span>}
                                     <img src={product.image} alt={product.name} className="w-[80%] h-[80%] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500" />
                                 </div>
+                                
                                 <h3 className="font-serif text-sm mb-2 h-10">{product.name}</h3>
+                                
                                 <div className="text-sm font-medium mb-4">
                                     {product.salePrice ? (
                                         <>
@@ -96,9 +121,18 @@ const ProductSingle: React.FC = () => {
                                         <span>₹{product.price}</span>
                                     )}
                                 </div>
-                                <button className="bg-[#0F281E] text-white text-xs font-bold uppercase px-6 py-3 hover:bg-[#1a4030] transition-colors">
-                                    Add to cart
-                                </button>
+
+                                {/* SMART BUTTON (Green Variant) */}
+                                <div className="mt-auto">
+                                    <AddToCartButton 
+                                        product={{
+                                            ...product,
+                                            price: product.salePrice || product.price
+                                        }}
+                                        onNavigate={onNavigate}
+                                        variant="primary"
+                                    />
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -110,7 +144,6 @@ const ProductSingle: React.FC = () => {
                 <div className="absolute inset-0 bg-black/20"></div> 
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                         {/* Card 1 */}
                          <div className="bg-white p-8 rounded-[2px] relative md:mt-0">
                             <div className="absolute -right-3 top-8 w-6 h-6 bg-[#0F281E] rounded-full flex items-center justify-center border-4 border-white">
                                 <div className="w-2 h-2 bg-[#E6C288] rounded-full"></div>
@@ -120,7 +153,6 @@ const ProductSingle: React.FC = () => {
                                 Helps clear mental fog and sharpen attention throughout the day. Feel present, grounded, and mentally aligned with ease.
                             </p>
                          </div>
-                         {/* Card 2 */}
                          <div className="bg-white p-8 rounded-[2px] relative md:mt-24">
                             <div className="absolute -left-3 top-8 w-6 h-6 bg-[#0F281E] rounded-full flex items-center justify-center border-4 border-white">
                                 <div className="w-2 h-2 bg-[#E6C288] rounded-full"></div>
@@ -130,7 +162,6 @@ const ProductSingle: React.FC = () => {
                                 Steady, clean vitality that supports your day without spikes or crashes. Calm, dependable strength you can return to daily.
                             </p>
                          </div>
-                         {/* Card 3 */}
                          <div className="bg-white p-8 rounded-[2px] relative md:mt-12">
                             <div className="absolute -left-3 top-8 w-6 h-6 bg-[#0F281E] rounded-full flex items-center justify-center border-4 border-white">
                                 <div className="w-2 h-2 bg-[#E6C288] rounded-full"></div>
