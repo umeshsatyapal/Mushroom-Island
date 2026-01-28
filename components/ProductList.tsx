@@ -1,12 +1,17 @@
 import React from 'react';
+import AddToCartButton from './AddToCartButton'; // Import the smart button
+
+// Define Props to accept navigation logic
+interface ProductListProps {
+    onNavigate: (page: 'home' | 'shop' | 'product-single' | 'cart') => void;
+}
 
 const products = [
     {
         id: 1,
         name: "Cordyceps Flowers: Protected",
-        price: 2499, // Realistic INR price
+        price: 2499, 
         salePrice: null,
-        // Using a Cordyceps-like placeholder image
         image: "https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?q=80&w=1974&auto=format&fit=crop", 
         isSale: false
     },
@@ -15,7 +20,6 @@ const products = [
         name: "Chaga: Strength From Within",
         price: 1499,
         salePrice: null,
-        // Using a Chaga-like placeholder image
         image: "https://images.unsplash.com/photo-1576673442511-7e39b6545c87?q=80&w=2034&auto=format&fit=crop",
         isSale: false
     },
@@ -24,7 +28,6 @@ const products = [
         name: "Ginger: Awaken Inner Warmth",
         price: 1499,
         salePrice: 899,
-        // Using a Ginger root placeholder
         image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?q=80&w=2080&auto=format&fit=crop",
         isSale: true
     },
@@ -33,17 +36,16 @@ const products = [
         name: "Astragalus: Rooted In Strength",
         price: 1699,
         salePrice: 1099,
-        // Using a Root/Bark placeholder
         image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=2080&auto=format&fit=crop",
         isSale: true
     }
 ];
 
-const ProductList: React.FC = () => {
+const ProductList: React.FC<ProductListProps> = ({ onNavigate }) => {
     return (
         <section className="py-24 bg-white text-[#2A352B]" id="shop">
             
-            {/* 1. Intro Text Section */}
+            {/* Intro Text */}
             <div className="max-w-4xl mx-auto px-6 text-center mb-20">
                 <p className="text-xl md:text-2xl font-serif leading-relaxed text-gray-900">
                     Our formulas begin in the wild—potent mushrooms and adaptogens refined into 
@@ -53,21 +55,18 @@ const ProductList: React.FC = () => {
                 </p>
             </div>
 
-            {/* 2. Product Grid (4 Columns) */}
+            {/* Product Grid */}
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
                 {products.map((product) => (
-                    <div key={product.id} className="group flex flex-col">
+                    <div key={product.id} className="group flex flex-col h-full">
                         
                         {/* Image Container */}
                         <div className="relative bg-[#F4F4F4] aspect-square flex items-center justify-center mb-6 overflow-hidden">
-                            {/* Sale Badge */}
                             {product.isSale && (
                                 <span className="absolute top-4 right-4 bg-[#3E3E20] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest z-10">
                                     Sale!
                                 </span>
                             )}
-                            
-                            {/* Product Image */}
                             <img 
                                 src={product.image} 
                                 alt={product.name}
@@ -96,10 +95,18 @@ const ProductList: React.FC = () => {
                             )}
                         </div>
 
-                        {/* 'Add to Cart' Button */}
-                        <button className="mt-auto w-max bg-[#0F281E] text-white text-xs font-bold uppercase tracking-widest px-8 py-3 hover:bg-[#1a4030] transition-colors duration-300">
-                            Add to cart
-                        </button>
+                        {/* SMART ADD TO CART BUTTON */}
+                        <div className="mt-auto">
+                            <AddToCartButton 
+                                // Logic: If sale price exists, use it. Otherwise use normal price.
+                                product={{
+                                    ...product,
+                                    price: product.salePrice || product.price
+                                }}
+                                onNavigate={onNavigate}
+                                variant="primary"
+                            />
+                        </div>
 
                     </div>
                 ))}
