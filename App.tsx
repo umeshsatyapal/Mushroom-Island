@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CartProvider } from './CartContext'; // Import the Provider
+import { CartProvider } from './context/CartContext'; // <--- FIXED PATH
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductList from './components/ProductList';
@@ -13,7 +13,6 @@ function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product-single' | 'cart'>('home');
 
   return (
-    // WRAP EVERYTHING IN CART PROVIDER
     <CartProvider>
       <div className="min-h-screen bg-[#2A352B]">
         <Navbar onNavigate={setCurrentPage} />
@@ -21,7 +20,7 @@ function App() {
         {currentPage === 'home' && (
           <main>
             <Hero />
-            <ProductList onNavigate={setCurrentPage} /> {/* Pass navigate to grids */}
+            <ProductList onNavigate={setCurrentPage} />
             <MidSection />
             <Footer />
           </main>
