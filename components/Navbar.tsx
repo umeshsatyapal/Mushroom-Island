@@ -1,13 +1,12 @@
 import React from 'react';
 import { ShoppingBag, Menu, ShoppingCart } from 'lucide-react';
-import { useCart } from '../CartContext'; // Import the context
+import { useCart } from '../context/CartContext'; // <--- FIXED PATH
 
 interface NavbarProps {
     onNavigate: (page: 'home' | 'shop' | 'product-single' | 'cart') => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
-    // Get real cart data from the context
     const { cartTotal, cartCount } = useCart();
 
     return (
@@ -96,7 +95,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                         Login
                     </a>
 
-                    {/* WIRED UP CART BUTTON (Dynamic) */}
+                    {/* WIRED UP CART BUTTON */}
                     <button 
                         onClick={() => onNavigate('cart')}
                         className="bg-[#FFC470] text-[#1a241b] px-4 py-2 rounded-[2px] font-medium flex items-center gap-3 hover:bg-[#E6C288] transition-colors shadow-md"
