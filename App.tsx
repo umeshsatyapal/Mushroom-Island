@@ -5,10 +5,11 @@ import ProductList from './components/ProductList';
 import MidSection from './components/MidSection';
 import Footer from './components/Footer';
 import Shop from './components/Shop'; 
-import ProductSingle from './components/ProductSingle'; // <--- Import New Component
+import ProductSingle from './components/ProductSingle';
+import Cart from './components/Cart'; // <--- Import New Component
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product-single'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product-single' | 'cart'>('home');
 
   return (
     <div className="min-h-screen bg-[#2A352B]">
@@ -34,6 +35,12 @@ function App() {
       {currentPage === 'product-single' && (
         <main>
           <ProductSingle />
+        </main>
+      )}
+
+      {currentPage === 'cart' && (
+        <main>
+          <Cart onNavigate={setCurrentPage} />
         </main>
       )}
     </div>
