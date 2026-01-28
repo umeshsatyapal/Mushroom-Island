@@ -2,7 +2,7 @@ import React from 'react';
 import { ShoppingBag, Menu, ShoppingCart } from 'lucide-react';
 
 interface NavbarProps {
-    onNavigate: (page: 'home' | 'shop' | 'product-single') => void;
+    onNavigate: (page: 'home' | 'shop' | 'product-single' | 'cart') => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                         Home
                     </button>
 
-                    {/* SHOP DROPDOWN WRAPPER */}
+                    {/* SHOP DROPDOWN */}
                     <div className="relative group py-2">
                         <button 
                             onClick={() => onNavigate('shop')} 
@@ -35,17 +35,19 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                             Shop
                         </button>
 
-                        {/* THE DROPDOWN MENU */}
                         <div className="absolute top-full left-0 mt-0 w-48 bg-[#FFC470] shadow-lg rounded-[2px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden">
                             <div className="flex flex-col py-0 text-[#0F281E] normal-case tracking-normal font-sans font-medium text-sm">
-                                {/* Dark Hover Effect Applied Here */}
                                 <button 
                                     onClick={() => onNavigate('product-single')}
                                     className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left"
                                 >
                                     Product Single
                                 </button>
-                                <button className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left">
+                                {/* WIRED UP CART LINK */}
+                                <button 
+                                    onClick={() => onNavigate('cart')}
+                                    className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left"
+                                >
                                     Cart
                                 </button>
                                 <button className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left">
@@ -91,7 +93,11 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                         Login
                     </a>
 
-                    <button className="bg-[#FFC470] text-[#1a241b] px-4 py-2 rounded-[2px] font-medium flex items-center gap-3 hover:bg-[#E6C288] transition-colors shadow-md">
+                    {/* WIRED UP CART BUTTON */}
+                    <button 
+                        onClick={() => onNavigate('cart')}
+                        className="bg-[#FFC470] text-[#1a241b] px-4 py-2 rounded-[2px] font-medium flex items-center gap-3 hover:bg-[#E6C288] transition-colors shadow-md"
+                    >
                         <span>₹0.00</span>
                         <div className="relative">
                             <ShoppingCart size={18} />
