@@ -1,7 +1,9 @@
 import React from 'react';
 import { Check, Star } from 'lucide-react';
 import Footer from './Footer';
+import AddToCartButton from './AddToCartButton'; // Import the smart button
 
+// 1. Define Product Data
 const products = [
     { id: 1, name: "Astragalus: Rooted In Strength", price: 1499, oldPrice: 2100, image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=2080&auto=format&fit=crop", sale: true },
     { id: 2, name: "Chaga: Strength From Within", price: 1499, oldPrice: null, image: "https://images.unsplash.com/photo-1576673442511-7e39b6545c87?q=80&w=2034&auto=format&fit=crop", sale: false },
@@ -11,7 +13,16 @@ const products = [
     { id: 6, name: "Ginger: Awaken Inner Warmth", price: 899, oldPrice: 1499, image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?q=80&w=2080&auto=format&fit=crop", sale: true },
 ];
 
-const Shop: React.FC = () => {
+// 2. Define Props Interface (Must accept onNavigate)
+interface ShopProps {
+    onNavigate: (page: 'home' | 'shop' | 'product-single' | 'cart') => void;
+}
+
+const Shop: React.FC<ShopProps> = ({ onNavigate }) => {
+    
+    // Define the specific product object for the Sidebar Widget (Chaga)
+    const featuredSidebarProduct = products[1]; 
+
     return (
         <div className="bg-[#2A352B] min-h-screen pt-20">
             
@@ -46,11 +57,19 @@ const Shop: React.FC = () => {
                                     <li className="hover:text-[#E6C288] cursor-pointer">Relaxation</li>
                                 </ul>
                             </div>
-                            <div className="bg-[#2A352B] p-6 text-white text-center">
-                                <img src={products[1].image} alt="Featured" className="w-24 h-24 mx-auto mb-4 object-contain bg-white rounded-full p-2" />
-                                <h4 className="font-serif mb-2">Chaga: Strength</h4>
-                                <p className="text-[#E6C288] font-bold mb-4">₹1,499</p>
-                                <button className="w-full bg-[#E6C288] text-[#2A352B] text-xs font-bold py-2 uppercase">Add to Cart</button>
+                            
+                            {/* SIDEBAR WIDGET */}
+                            <div className="bg-[#2A352B] p-6 text-white text-center flex flex-col items-center">
+                                <img src={featuredSidebarProduct.image} alt="Featured" className="w-24 h-24 mx-auto mb-4 object-contain bg-white rounded-full p-2" />
+                                <h4 className="font-serif mb-2">{featuredSidebarProduct.name}</h4>
+                                <p className="text-[#E6C288] font-bold mb-4">₹{featuredSidebarProduct.price.toLocaleString()}</p>
+                                
+                                {/* ORANGE BUTTON FOR SIDEBAR */}
+                                <AddToCartButton 
+                                    product={featuredSidebarProduct}
+                                    onNavigate={onNavigate}
+                                    variant="secondary" 
+                                />
                             </div>
                         </div>
 
@@ -58,18 +77,28 @@ const Shop: React.FC = () => {
                         <div className="lg:col-span-3">
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {products.map((product) => (
-                                    <div key={product.id} className="group flex flex-col">
+                                    <div key={product.id} className="group flex flex-col h-full">
                                         <div className="relative bg-[#F9F8F6] aspect-square flex items-center justify-center mb-4 overflow-hidden">
                                             {product.sale && <span className="absolute top-3 right-3 bg-[#3E3E20] text-white text-[10px] font-bold px-2 py-1 uppercase">Sale!</span>}
                                             <img src={product.image} alt={product.name} className="w-[70%] h-[70%] object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
-                                            <button className="absolute bottom-0 w-full bg-[#0F281E] text-white py-3 text-xs font-bold uppercase translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                                Add to Cart
-                                            </button>
+                                            
+                                            {/* We removed the old hover button, as we now use the static one below for mobile friendliness */}
                                         </div>
+                                        
                                         <h3 className="font-serif text-[#2A352B] mb-1">{product.name}</h3>
-                                        <div className="text-sm">
+                                        
+                                        <div className="text-sm mb-4">
                                             {product.oldPrice && <span className="text-gray-400 line-through mr-2">₹{product.oldPrice.toLocaleString()}</span>}
                                             <span className="font-bold text-[#2A352B]">₹{product.price.toLocaleString()}</span>
+                                        </div>
+
+                                        {/* GREEN BUTTON FOR GRID */}
+                                        <div className="mt-auto">
+                                            <AddToCartButton 
+                                                product={product}
+                                                onNavigate={onNavigate}
+                                                variant="primary"
+                                            />
                                         </div>
                                     </div>
                                 ))}
@@ -78,38 +107,6 @@ const Shop: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-            {/* SUBSCRIBE SECTION */}
-            <section className="bg-[#F9F8F6] py-20">
-                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                    <div>
-                        <h2 className="text-4xl md:text-5xl font-serif text-[#2A352B] mb-8 leading-tight">
-                            Subscribe to get a <br/><span className="italic text-[#C85515]">monthly refill</span> of magic
-                        </h2>
-                        <div className="space-y-8">
-                            <div className="flex gap-4">
-                                <div className="w-8 h-8 bg-[#E6C288] rounded-full flex items-center justify-center flex-shrink-0 text-[#2A352B]"><Check size={16} /></div>
-                                <div><h4 className="font-bold text-[#2A352B] mb-1">Customer Satisfaction</h4><p className="text-sm text-gray-600">Rated 4.9/5 by over 10,000 daily users.</p></div>
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="w-8 h-8 bg-[#E6C288] rounded-full flex items-center justify-center flex-shrink-0 text-[#2A352B]"><Check size={16} /></div>
-                                <div><h4 className="font-bold text-[#2A352B] mb-1">Guaranteed Results</h4><p className="text-sm text-gray-600">Feel the difference in 30 days or your money back.</p></div>
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="w-8 h-8 bg-[#E6C288] rounded-full flex items-center justify-center flex-shrink-0 text-[#2A352B]"><Check size={16} /></div>
-                                <div><h4 className="font-bold text-[#2A352B] mb-1">Excellent Quality</h4><p className="text-sm text-gray-600">Double-extracted, lab-tested, potent fruiting bodies.</p></div>
-                            </div>
-                        </div>
-                        <button className="mt-10 bg-[#0F281E] text-white px-8 py-4 rounded-sm font-bold uppercase tracking-wider hover:bg-[#1a4030] transition-colors">
-                            Place Your Order
-                        </button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                         <img src="https://images.unsplash.com/photo-1515023115689-589c33041697?q=80&w=1974&auto=format&fit=crop" className="w-full h-80 object-cover rounded-sm mt-12" />
-                         <img src="https://images.unsplash.com/photo-1520206183501-b80df61043c2?q=80&w=1974&auto=format&fit=crop" className="w-full h-80 object-cover rounded-sm" />
-                    </div>
-                </div>
-            </section>
 
             {/* TESTIMONIALS */}
             <section className="py-20 bg-white">
