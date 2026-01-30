@@ -73,12 +73,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigate }) => {
                         </div>
                         
                         <div className="grid grid-cols-2 gap-4">
-                            {/* BUTTON 1: CONTINUE SHOPPING */}
+                            {/* BUTTON 1: CONTINUE SHOPPING (Now just closes the cart) */}
                             <button 
-                                onClick={() => {
-                                    closeCart();
-                                    onNavigate('shop'); // Goes to Shop Page
-                                }}
+                                onClick={closeCart} // <--- UPDATED: Just close sidebar to stay on current page
                                 className="bg-transparent border border-white text-white py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-[#0F281E] transition-colors"
                             >
                                 Continue Shopping
@@ -88,7 +85,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigate }) => {
                             <button 
                                 onClick={() => {
                                     closeCart();
-                                    onNavigate('cart'); // Goes to Cart/Checkout Page
+                                    onNavigate('cart'); // Goes to Checkout Page
                                 }}
                                 className="bg-[#C85515] text-white py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-[#A04411] transition-colors"
                             >
