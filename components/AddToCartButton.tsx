@@ -4,16 +4,18 @@ import { useCart, Product } from '../context/CartContext';
 
 interface AddToCartButtonProps {
     product: Product;
+    quantity?: number; // UPDATED: Accept quantity prop
     variant?: 'primary' | 'secondary'; 
     onNavigate: (page: 'cart') => void;
 }
 
-const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product, variant = 'primary', onNavigate }) => {
-    const { addToCart, openCart } = useCart(); // Get openCart function
+const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product, quantity = 1, variant = 'primary', onNavigate }) => {
+    const { addToCart, openCart } = useCart(); 
     const [isAdded, setIsAdded] = useState(false);
 
     const handleClick = () => {
-        addToCart(product);
+        // UPDATED: Pass the specific quantity to the context
+        addToCart(product, quantity);
         setIsAdded(true);
     };
 
@@ -37,7 +39,6 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product, variant = 'p
                 )}
             </button>
             
-            {/* "View cart" now opens the Sidebar */}
             {isAdded && (
                 <button 
                     onClick={openCart}
