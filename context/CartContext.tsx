@@ -17,16 +17,16 @@ interface CartContextType {
     removeFromCart: (id: number) => void;
     cartTotal: number;
     cartCount: number;
-    isCartOpen: boolean;          // Logic to check if sidebar is open
-    openCart: () => void;         // Command to open it
-    closeCart: () => void;        // Command to close it
+    isCartOpen: boolean;
+    openCart: () => void;
+    closeCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [items, setItems] = useState<CartItem[]>([]);
-    const [isCartOpen, setIsCartOpen] = useState(false); // Default is closed
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const addToCart = (product: Product) => {
         setItems(prevItems => {
@@ -36,8 +36,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
                 );
             }
-            // Optional: Automatically open cart when adding a new item
-            setIsCartOpen(true); 
+            // FIXED: Removed "setIsCartOpen(true)" so it stays closed until you click "View Cart"
             return [...prevItems, { ...product, quantity: 1 }];
         });
     };
