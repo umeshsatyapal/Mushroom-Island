@@ -1,13 +1,14 @@
 import React from 'react';
 import { ShoppingBag, Menu, ShoppingCart } from 'lucide-react';
-import { useCart } from '../context/CartContext'; // <--- FIXED PATH
+import { useCart } from '../context/CartContext'; 
 
 interface NavbarProps {
     onNavigate: (page: 'home' | 'shop' | 'product-single' | 'cart') => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
-    const { cartTotal, cartCount } = useCart();
+    // Get real cart data AND the openCart function
+    const { cartTotal, cartCount, openCart } = useCart();
 
     return (
         <>
@@ -46,8 +47,9 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                                 >
                                     Product Single
                                 </button>
+                                {/* "Cart" in dropdown also opens the sidebar now */}
                                 <button 
-                                    onClick={() => onNavigate('cart')}
+                                    onClick={openCart}
                                     className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left"
                                 >
                                     Cart
@@ -95,9 +97,9 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                         Login
                     </a>
 
-                    {/* WIRED UP CART BUTTON */}
+                    {/* CART BUTTON - CLICKING OPENS SIDEBAR */}
                     <button 
-                        onClick={() => onNavigate('cart')}
+                        onClick={openCart}
                         className="bg-[#FFC470] text-[#1a241b] px-4 py-2 rounded-[2px] font-medium flex items-center gap-3 hover:bg-[#E6C288] transition-colors shadow-md"
                     >
                         <span>₹{cartTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
