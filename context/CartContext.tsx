@@ -13,7 +13,8 @@ interface CartItem extends Product {
 
 interface CartContextType {
     items: CartItem[];
-    addToCart: (product: Product) => void;
+    // UPDATED: Now accepts an optional quantity number
+    addToCart: (product: Product, quantity?: number) => void;
     removeFromCart: (id: number) => void;
     cartTotal: number;
     cartCount: number;
@@ -28,16 +29,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [items, setItems] = useState<CartItem[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
 
-    const addToCart = (product: Product) => {
+    // UPDATED LOGIC: Accepts quantity, defaults to 1 if not provided
+    const addToCart = (product: Product, quantity: number = 1) => {
         setItems(prevItems => {
             const existingItem = prevItems.find(item => item.id === product.id);
             if (existingItem) {
                 return prevItems.map(item => 
-                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                    item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
                 );
             }
-            // FIXED: Removed "setIsCartOpen(true)" so it stays closed until you click "View Cart"
-            return [...prevItems, { ...product, quantity: 1 }];
+            // Add the specific quantity requested
+            return [...prevItems, { ...product, quantity: quantity }];
         });
     };
 
