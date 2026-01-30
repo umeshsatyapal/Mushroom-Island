@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CartProvider } from './context/CartContext'; // <--- FIXED PATH
+import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductList from './components/ProductList';
@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import Shop from './components/Shop'; 
 import ProductSingle from './components/ProductSingle';
 import Cart from './components/Cart';
+import CartSidebar from './components/CartSidebar'; // Import the new Sidebar
 
 function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product-single' | 'cart'>('home');
@@ -16,6 +17,9 @@ function App() {
     <CartProvider>
       <div className="min-h-screen bg-[#2A352B]">
         <Navbar onNavigate={setCurrentPage} />
+        
+        {/* PLACE SIDEBAR HERE - It sits on top of everything else */}
+        <CartSidebar onNavigate={setCurrentPage} /> 
 
         {currentPage === 'home' && (
           <main>
