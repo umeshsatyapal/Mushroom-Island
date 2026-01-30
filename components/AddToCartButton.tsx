@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
-import { useCart, Product } from '../context/CartContext'; // <--- FIXED PATH
+import { useCart, Product } from '../context/CartContext'; 
 
 interface AddToCartButtonProps {
     product: Product;
@@ -9,7 +9,7 @@ interface AddToCartButtonProps {
 }
 
 const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product, variant = 'primary', onNavigate }) => {
-    const { addToCart } = useCart();
+    const { addToCart, openCart } = useCart(); // Get openCart function
     const [isAdded, setIsAdded] = useState(false);
 
     const handleClick = () => {
@@ -37,9 +37,10 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product, variant = 'p
                 )}
             </button>
             
+            {/* "View cart" now opens the Sidebar */}
             {isAdded && (
                 <button 
-                    onClick={() => onNavigate('cart')}
+                    onClick={openCart}
                     className="text-xs font-bold underline text-[#0F281E] hover:text-[#C85515] transition-colors ml-1"
                 >
                     View cart
