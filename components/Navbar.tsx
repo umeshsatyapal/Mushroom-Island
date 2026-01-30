@@ -7,7 +7,6 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
-    // Get real cart data AND the openCart function
     const { cartTotal, cartCount, openCart } = useCart();
 
     return (
@@ -47,14 +46,17 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                                 >
                                     Product Single
                                 </button>
-                                {/* "Cart" in dropdown also opens the sidebar now */}
                                 <button 
                                     onClick={openCart}
                                     className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left"
                                 >
                                     Cart
                                 </button>
-                                <button className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left">
+                                {/* CHECKOUT LINK */}
+                                <button 
+                                    onClick={() => onNavigate('cart')}
+                                    className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left"
+                                >
                                     Checkout
                                 </button>
                                 <button className="px-6 py-3 hover:bg-[#2A352B] hover:text-[#E6C288] transition-colors block text-left">
@@ -97,7 +99,6 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                         Login
                     </a>
 
-                    {/* CART BUTTON - CLICKING OPENS SIDEBAR */}
                     <button 
                         onClick={openCart}
                         className="bg-[#FFC470] text-[#1a241b] px-4 py-2 rounded-[2px] font-medium flex items-center gap-3 hover:bg-[#E6C288] transition-colors shadow-md"
