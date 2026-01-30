@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import { Search, Minus, Plus } from 'lucide-react';
 import Footer from './Footer';
-import AddToCartButton from './AddToCartButton'; // Import the smart button
+import AddToCartButton from './AddToCartButton'; 
 
-// Define Props
 interface ProductSingleProps {
     onNavigate: (page: 'home' | 'shop' | 'product-single' | 'cart') => void;
 }
 
-// Data for the MAIN product shown at the top
 const mainProduct = {
     id: 5, 
     name: "Reishi: Drift Into Calmness", 
-    price: 1699, // Current selling price
+    price: 1699, 
     image: "https://images.unsplash.com/photo-1596483789033-288219463c22?q=80&w=1974&auto=format&fit=crop"
 };
 
-// Data for Related Products
 const relatedProducts = [
     { id: 1, name: "Cordyceps Flowers: Protected", price: 2499, salePrice: null, image: "https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?q=80&w=1974&auto=format&fit=crop" },
     { id: 2, name: "Chaga: Strength From Within", price: 1499, salePrice: null, image: "https://images.unsplash.com/photo-1576673442511-7e39b6545c87?q=80&w=2034&auto=format&fit=crop" },
@@ -25,6 +22,7 @@ const relatedProducts = [
 ];
 
 const ProductSingle: React.FC<ProductSingleProps> = ({ onNavigate }) => {
+    // This tracks the number you select (e.g., 4)
     const [quantity, setQuantity] = useState(1);
 
     return (
@@ -62,20 +60,20 @@ const ProductSingle: React.FC<ProductSingleProps> = ({ onNavigate }) => {
 
                         {/* ACTION AREA */}
                         <div className="flex gap-4">
-                            {/* Quantity Selector (Visual only for now, keeps UI intact) */}
+                            {/* Quantity Selector */}
                             <div className="bg-white text-[#2A352B] flex items-center px-4 rounded-[2px] h-auto">
                                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus size={14}/></button>
                                 <span className="w-10 text-center font-bold">{quantity}</span>
                                 <button onClick={() => setQuantity(quantity + 1)}><Plus size={14}/></button>
                             </div>
                             
-                            {/* SMART ADD TO CART BUTTON (Orange Variant) */}
-                            {/* We use flex-1 to make it stretch like the original design */}
+                            {/* SMART ADD TO CART BUTTON */}
                             <div className="flex-1"> 
                                 <AddToCartButton 
                                     product={mainProduct}
+                                    quantity={quantity} // <--- UPDATED: Pass the selected quantity here!
                                     onNavigate={onNavigate}
-                                    variant="secondary" // Orange style
+                                    variant="secondary" 
                                 />
                             </div>
                         </div>
@@ -122,7 +120,7 @@ const ProductSingle: React.FC<ProductSingleProps> = ({ onNavigate }) => {
                                     )}
                                 </div>
 
-                                {/* SMART BUTTON (Green Variant) */}
+                                {/* RELATED PRODUCTS (Default Quantity = 1) */}
                                 <div className="mt-auto">
                                     <AddToCartButton 
                                         product={{
