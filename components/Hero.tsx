@@ -2,38 +2,54 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const Hero: React.FC = () => {
-    return (
-        <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[#2A352B]">
-            
-            {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#2A352B] via-[#1a241b] to-[#0d120e] opacity-100 z-0"></div>
+  return (
+    <div className="relative h-screen w-full overflow-hidden">
+      
+      {/* 1. VIDEO BACKGROUND */}
+      {/* I used a high-quality forest background here. You can replace the 'src' link with any video URL you like later. */}
+      <video 
+        autoPlay 
+        loop 
+        muted 
+        playsInline 
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-mysterious-forest-with-sun-rays-1375-large.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
-            {/* Main Content - Centered */}
-            <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <span className="block text-[#E6C288] font-bold tracking-[0.2em] uppercase mb-6 text-sm">
-                    Rare. Wild. Potent.
-                </span>
-                
-                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white leading-[1.1] mb-8 drop-shadow-lg">
-                    Watch Nature <br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E6C288] to-white">
-                        Awaken
-                    </span>
-                </h1>
-                
-                <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-                    Experience the magnificent growth of our medicinal fungi. Cultivated with precision to unlock their full potential.
-                </p>
-                
-                <div className="flex justify-center">
-                    <button className="group bg-[#E6C288] text-[#2A352B] px-12 py-5 rounded-full font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(230,194,136,0.3)] hover:shadow-[0_0_40px_rgba(230,194,136,0.6)] hover:scale-105 transition-all duration-300 flex items-center gap-3">
-                        Start the Ritual
-                        <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                    </button>
-                </div>
-            </div>
-        </section>
-    );
+      {/* 2. DARK OVERLAY */}
+      {/* This ensures your white text pops against the video */}
+      <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* 3. CONTENT (Centered) */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 pt-20">
+        
+        {/* Small Tagline */}
+        <p className="text-[#E6C288] tracking-[0.2em] text-xs md:text-sm font-bold uppercase mb-6">
+          Rare. Wild. Potent.
+        </p>
+
+        {/* Main Headline */}
+        <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight">
+          Watch Nature <br />
+          <span className="text-[#E6C288]">Awaken</span>
+        </h1>
+
+        {/* Subtext */}
+        <p className="text-gray-200 text-sm md:text-base max-w-lg mb-10 leading-relaxed opacity-90">
+          Experience the magnificent growth of our medicinal fungi. Cultivated with precision to unlock their full potential.
+        </p>
+
+        {/* Call to Action Button */}
+        <button className="group bg-[#E6C288] text-[#1a241b] px-8 py-4 rounded-[2px] font-bold uppercase tracking-widest text-xs flex items-center gap-3 hover:bg-white transition-all duration-300">
+          Start the Ritual
+          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+
+      </div>
+    </div>
+  );
 };
 
 export default Hero;
